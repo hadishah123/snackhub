@@ -168,3 +168,15 @@ server/
 - Axios for API calls
 - React Router
 - Context API or Redux Toolkit
+
+--- 
+
+## 🧠 How To Present This in Your Resume
+
+Instead of writing:
+`“Built a food ordering website”`
+
+Write:
+`Developed a full-stack restaurant management system using MERN stack featuring JWT authentication, real-time order tracking via Socket.io, seat booking system, and integrated payment gateway with role-based admin dashboard.`
+
+That sounds 🔥 professional.
