@@ -19,14 +19,10 @@ app.use(express.json());
 
 // ---------- CORS ----------
 const allowedOrigins = [
-  process.env.CLIENT_URL,      // Production frontend
-  "http://localhost:5173"      // Local development frontend
+  "http://localhost:5173",
+  "https://snackhub-nagpur.vercel.app"
 ];
-
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 // ---------- Session & Passport ----------
 app.use(
