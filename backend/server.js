@@ -18,13 +18,11 @@ connectDB();
 app.use(express.json());
 
 // ---------- CORS ----------
-const allowedOrigins = [process.env.CLIENT_URL]; // e.g., https://snackhub.vercel.app
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+const allowedOrigins = [process.env.CLIENT_URL];
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 
 // ---------- Session & Passport ----------
 app.use(
