@@ -20,13 +20,15 @@
   "author": "Hadi Shah",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
+    "connect-mongo": "^4.6.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
-    "express": "^4.18.2",
+    "express": "^4.22.1",
     "express-session": "^1.19.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^8.3.3",
+    "mongoose": "^8.23.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
   },
