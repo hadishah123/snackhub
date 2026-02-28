@@ -1,19 +1,26 @@
 import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function GoogleSuccess() {
-  const [params] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Get token from URL
+    const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    if (token) {
-      localStorage.setItem("token", token);
-      navigate("/");
-    }
-  }, [params, navigate]);
 
-  return <h2>Logging you in...</h2>;
+    if (token) {
+      // Save JWT in localStorage
+      localStorage.setItem("token", token);
+      // Redirect to dashboard
+      navigate("/dashboard");
+    } else {
+      // Fallback to login if no token
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  return <p>Logging in...</p>;
 }
 
 export default GoogleSuccess;
