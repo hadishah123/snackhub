@@ -14,7 +14,7 @@ function Navbar() {
       {user ? (
         <>
           <span style={{ marginLeft: "10px" }}>
-            Welcome, {user.name} 👋
+            Welcome, {user.displayName} 👋
           </span>
           <button
             onClick={logout}

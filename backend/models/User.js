@@ -2,16 +2,11 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    firebaseUid: { type: String, required: true, unique: true },
     name: String,
-    email: { type: String, unique: true },
-    password: String,
-    role: {
-      type: String,
-      enum: ["customer", "admin", "staff"],
-      default: "customer",
-    },
+    email: String,
     phone: String,
-    address: String,
+    role: { type: String, default: "customer" },
   },
   { timestamps: true }
 );

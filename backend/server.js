@@ -2,12 +2,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./config/db"); // MongoDB connection
-const passport = require("passport");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
-
-require("./config/passport"); // Passport strategies (Google, JWT, etc.)
+const connectDB = require("./config/db");
 
 const app = express();
 
@@ -22,36 +17,23 @@ const allowedOrigins = [
   "http://localhost:5173",
   "https://snackhub-nagpur.vercel.app"
 ];
-app.use(cors({ origin: allowedOrigins, credentials: true }));
 
-// ---------- Session & Passport ----------
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: "sessions" // optional, defaults to "sessions"
-    }),
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-      secure: process.env.NODE_ENV === "production" // only over HTTPS in prod
-    }
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
   })
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
-
+app.use("/api/users", require("./routes/userRoutes"));
 // ---------- Routes ----------
-app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/foods", require("./routes/FoodRoutes"));
-// TODO: add /api/orders, /api/bookings, /api/chats, etc.
+// Later we’ll add:
+ // app.use("/api/orders", require("./routes/orderRoutes"));
 
 // ---------- Health Check ----------
 app.get("/", (req, res) => {
-  res.json({ message: "SnackHub API Running" });
+  res.json({ message: "SnackHub API Running 🚀" });
 });
 
 // ---------- 404 Middleware ----------
