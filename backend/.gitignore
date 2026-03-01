@@ -4,3 +4,4 @@ dist/
 logs/
 *.log
 coverage/
+backend/config/serviceAccountKey.json
