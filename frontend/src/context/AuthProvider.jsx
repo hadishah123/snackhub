@@ -11,20 +11,34 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const token = await firebaseUser.getIdToken();
+        // 🚀 STEP 1: Set user immediately. 
+        // This makes the UI redirect and show "Welcome" INSTANTLY.
+        setUser(firebaseUser);
+        setLoading(false); 
 
         try {
-          await axios.post("/api/users/sync", { token }); // ✅ make sure endpoint exists
-        } catch (err) {
-          console.error("Failed to sync user with backend:", err);
-        }
+          // 🚀 STEP 2: Handle Backend Sync in the background.
+          // The user doesn't have to wait for this to finish to see the Home page.
+          const token = await firebaseUser.getIdToken();
 
-        setUser(firebaseUser);
+          const response = await axios.post("/users/sync", {}, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          console.log("✅ Background Sync Successful:", response.data);
+          
+          // Optional: If your backend returns extra data (like 'role'), 
+          // you can update the user state again here without flashing the UI.
+        } catch (err) {
+          console.error("❌ Background sync failed:", err.response?.data || err.message);
+          // We don't necessarily logout here anymore, because the user is already authenticated with Firebase.
+        }
       } else {
         setUser(null);
+        setLoading(false);
       }
-
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -41,7 +55,10 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ user, loading, logout }}>
-      {children}
+      {/* We use loading only for the initial app load (the splash screen).
+          Once Firebase gives us a 'yes' or 'no', children render immediately.
+      */}
+      {!loading && children}
     </AuthContext.Provider>
   );
 }
