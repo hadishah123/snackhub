@@ -1,9 +1,6 @@
-## prompt
+## Goal 🎯
 
-I want you to act as a senior full-stack MERN developer and software architect.
-
-Help me build a complete production-ready MERN stack web application for a Momos Shop. 
-The application should be scalable, cleanly structured, and portfolio-level impressive.
+# SnackHub – Full Stack Food Delivery App
 
 Project Requirements:
 
