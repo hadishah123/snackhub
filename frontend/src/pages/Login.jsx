@@ -1,165 +1,197 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { auth } from "../firebase";
 import {
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
-
-const googleLogin = async () => {
-  const provider = new GoogleAuthProvider();
-  await signInWithPopup(auth, provider);
-};
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Email/password state
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Email login state
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   // Phone login state
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [confirmationResult, setConfirmationResult] = useState(null);
 
-  // Setup invisible reCAPTCHA once
+  // Redirect if already logged in
   useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-        }
-      );
+    if (user) {
+      navigate("/");
     }
-  }, []);
+  }, [user, navigate]);
 
-  // Email/password login
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  // ---------------- GOOGLE LOGIN ----------------
+  const handleGoogleLogin = async () => {
     try {
-      const { data } = await axios.post("/auth/login", form);
-      localStorage.setItem("token", data.token);
-      alert("Login successful!");
+      setLoading(true);
+      setError("");
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
       navigate("/");
     } catch (err) {
-      console.error(err);
-      alert("Invalid credentials");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Send OTP
-  const sendOTP = async () => {
+  // ---------------- EMAIL LOGIN ----------------
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
     try {
-      const appVerifier = window.recaptchaVerifier;
-      const result = await signInWithPhoneNumber(auth, phone, appVerifier);
-      setConfirmationResult(result);
-      alert("OTP sent!");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to send OTP");
+      setLoading(true);
+      setError("");
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch (err) {
+      console.error("Email login error:", err);
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Verify OTP
-  const verifyOTP = async () => {
+  // ---------------- PHONE LOGIN ----------------
+  const setupRecaptcha = () => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        "recaptcha-container",
+        { size: "invisible" },
+        auth
+      );
+    }
+  };
+
+  const handleSendOTP = async () => {
     try {
+      setError("");
+      setLoading(true);
+      setupRecaptcha();
+
+      const appVerifier = window.recaptchaVerifier;
+      const result = await signInWithPhoneNumber(auth, phone, appVerifier);
+      setConfirmationResult(result);
+    } catch (err) {
+      console.error("Error sending OTP:", err);
+      setError("Failed to send OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    try {
+      setLoading(true);
+      setError("");
       await confirmationResult.confirm(otp);
-      alert("Phone login successful!");
       navigate("/");
-    } catch (error) {
-      console.error(error);
-      alert("Invalid OTP");
+    } catch (err) {
+      console.error("Error verifying OTP:", err);
+      setError("Invalid OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div style={{ maxWidth: "400px", margin: "auto", padding: "20px" }}>
+      <h2>Login</h2>
 
-      {/* Email Login */}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      {/* -------- Google Login -------- */}
+      <button
+        onClick={handleGoogleLogin}
+        disabled={loading}
+        style={{ width: "100%", marginBottom: "15px" }}
+      >
+        Continue with Google
+      </button>
+
+      <hr />
+
+      {/* -------- Email Login -------- */}
+      <form onSubmit={handleEmailLogin}>
+        <h4>Email Login</h4>
         <input
           type="email"
           placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="border p-2 rounded"
+          value={email}
           required
+          onChange={(e) => setEmail(e.target.value)}
+          style={{ width: "100%", marginBottom: "10px" }}
         />
         <input
           type="password"
           placeholder="Password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          className="border p-2 rounded"
+          value={password}
           required
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ width: "100%", marginBottom: "10px" }}
         />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
+        <button type="submit" disabled={loading} style={{ width: "100%" }}>
+          Login with Email
         </button>
       </form>
 
-      <div className="my-4 text-center">OR</div>
-        <button onClick={googleLogin}>
-          Continue with Google
-        </button>
-      <div className="text-center mb-2 font-semibold">Phone Login</div>
+      <hr />
 
-      {/* Phone Login */}
-      <input
-        type="tel"
-        placeholder="+1234567890"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        className="border p-2 rounded w-full mb-2"
-      />
+      {/* -------- Phone Login -------- */}
+      <div>
+        <h4>Phone Login</h4>
 
-      <button
-        type="button"
-        onClick={sendOTP}
-        className="bg-green-500 text-white p-2 rounded hover:bg-green-600 w-full mb-2"
-      >
-        Send OTP
-      </button>
+        <input
+          type="text"
+          placeholder="+91XXXXXXXXXX"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          style={{ width: "100%", marginBottom: "10px" }}
+        />
 
-      {confirmationResult && (
-        <>
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            className="border p-2 rounded w-full mb-2"
-          />
+        {!confirmationResult ? (
           <button
-            type="button"
-            onClick={verifyOTP}
-            className="bg-purple-500 text-white p-2 rounded hover:bg-purple-600 w-full"
+            onClick={handleSendOTP}
+            disabled={loading}
+            style={{ width: "100%", marginBottom: "10px" }}
           >
-            Verify OTP
+            Send OTP
           </button>
-        </>
-      )}
+        ) : (
+          <>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              style={{ width: "100%", marginBottom: "10px" }}
+            />
+            <button
+              onClick={handleVerifyOTP}
+              disabled={loading}
+              style={{ width: "100%" }}
+            >
+              Verify OTP
+            </button>
+          </>
+        )}
 
-      {/* reCAPTCHA container */}
-      <div id="recaptcha-container"></div>
+        <div id="recaptcha-container"></div>
+      </div>
+
+      {loading && <p>Processing...</p>}
     </div>
   );
 }
