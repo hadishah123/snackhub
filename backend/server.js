@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(cors({
 // This says: "Any route in userRoutes.js starts with /api/users"
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/foods", require("./routes/FoodRoutes"));
+app.use("/api/orders", orderRoutes);
 
 // Health Check
 app.get("/", (req, res) => {

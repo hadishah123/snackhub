@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "_id": 1,
     "name": "Veg Momos",
     "description": "Steamed dumplings with mixed veggies",
     "price": 120,
@@ -9,7 +9,7 @@
     "isAvailable": true
   },
   {
-    "id": 2,
+    "_id": 2,
     "name": "Chicken Momos",
     "description": "Steamed dumplings with minced chicken",
     "price": 150,
@@ -18,7 +18,7 @@
     "isAvailable": true
   },
   {
-    "id": 3,
+    "_id": 3,
     "name": "Paneer Momos",
     "description": "Stuffed with soft paneer and spices",
     "price": 130,

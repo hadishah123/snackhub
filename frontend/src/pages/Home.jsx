@@ -1,9 +1,10 @@
+import ProductCard from "../components/ProductCard";
+
 function Home() {
-  return (
-    <div>
+  return (<>
       <h1>Welcome to SnackHub 🥟</h1>
       <p>Best Momos in Town</p>
-    </div>
+  </>
   );
 }
 
