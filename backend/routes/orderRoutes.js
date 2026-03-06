@@ -54,7 +54,22 @@ router.get("/", async (req, res) => {
 });
 
 /*
-  3️⃣ GET SINGLE ORDER
+  3️⃣ GET USER ORDERS (Order History)
+*/
+router.get("/user/:email", async (req, res) => {
+  try {
+    const orders = await Order.find({
+      customerEmail: req.params.email,
+    }).sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+/*
+  4️⃣ GET SINGLE ORDER
 */
 router.get("/:id", async (req, res) => {
   try {
@@ -71,7 +86,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /*
-  4️⃣ UPDATE ORDER STATUS
+  5️⃣ UPDATE ORDER STATUS
 */
 router.put("/:id/status", async (req, res) => {
   try {
@@ -97,7 +112,7 @@ router.put("/:id/status", async (req, res) => {
 });
 
 /*
-  5️⃣ DELETE ORDER (optional)
+  6️⃣ DELETE ORDER (optional)
 */
 router.delete("/:id", async (req, res) => {
   try {
