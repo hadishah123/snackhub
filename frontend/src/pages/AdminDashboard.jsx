@@ -8,7 +8,6 @@ function AdminDashboard() {
   const user = storedUser ? JSON.parse(storedUser) : null;
 
   useEffect(() => {
-
     if (!user?.email) return;
 
     const fetchOrders = async () => {
@@ -31,7 +30,6 @@ function AdminDashboard() {
   }, [user?.email]);
 
   const updateStatus = async (id, status) => {
-
     try {
 
       await axios.put(
@@ -53,7 +51,15 @@ function AdminDashboard() {
     } catch (error) {
       console.error("Error updating status", error);
     }
+  };
 
+  // Helper function for button styles
+  const getButtonClass = (currentStatus, buttonStatus, activeColor) => {
+    if (currentStatus === buttonStatus) {
+      return `${activeColor} text-white px-3 py-1 rounded border-2 border-black transition-all duration-200`;
+    }
+
+    return "bg-gray-200 text-gray-700 px-3 py-1 rounded opacity-70 hover:opacity-100 transition-all duration-200";
   };
 
   return (
@@ -67,7 +73,7 @@ function AdminDashboard() {
 
         <div
           key={order._id}
-          className="border rounded-lg p-4 mb-4"
+          className="border rounded-lg p-4 mb-4 shadow-sm"
         >
 
           <p className="font-semibold">
@@ -91,35 +97,39 @@ function AdminDashboard() {
           </p>
 
           <p className="text-sm mt-1">
-            Status: {order.orderStatus}
+            Status: <span className="font-medium">{order.orderStatus}</span>
           </p>
 
-          <div className="flex gap-2 mt-3 flex-wrap">
+          <div className="grid grid-cols-2 gap-2 mt-3">
 
             <button
+              disabled={order.orderStatus === "confirmed"}
               onClick={() => updateStatus(order._id, "confirmed")}
-              className="bg-blue-500 text-white px-2 py-1 rounded"
+              className={getButtonClass(order.orderStatus, "confirmed", "bg-blue-500")}
             >
               Confirm
             </button>
 
             <button
+              disabled={order.orderStatus === "preparing"}
               onClick={() => updateStatus(order._id, "preparing")}
-              className="bg-yellow-500 text-white px-2 py-1 rounded"
+              className={getButtonClass(order.orderStatus, "preparing", "bg-yellow-500")}
             >
               Preparing
             </button>
 
             <button
+              disabled={order.orderStatus === "out_for_delivery"}
               onClick={() => updateStatus(order._id, "out_for_delivery")}
-              className="bg-purple-500 text-white px-2 py-1 rounded"
+              className={getButtonClass(order.orderStatus, "out_for_delivery", "bg-purple-500")}
             >
               Out
             </button>
 
             <button
+              disabled={order.orderStatus === "delivered"}
               onClick={() => updateStatus(order._id, "delivered")}
-              className="bg-green-500 text-white px-2 py-1 rounded"
+              className={getButtonClass(order.orderStatus, "delivered", "bg-green-500")}
             >
               Delivered
             </button>
