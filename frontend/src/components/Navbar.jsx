@@ -1,52 +1,89 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
 
   const isAdmin = user?.email === "admin@snackhub.com";
+  const displayName = isAdmin ? "Admin" : user?.displayName || user?.email;
 
   const handleOrdersClick = () => {
     navigate(isAdmin ? "/admin" : "/orders");
+    setIsOpen(false);
   };
 
-  const displayName = isAdmin
-    ? "Admin"
-    : user?.displayName || user?.email;
-
   return (
-    <nav className="p-5 bg-gray-200 flex items-center gap-3">
+    <nav className="bg-gray-200 p-4 flex items-center justify-between relative">
 
-      <Link to="/">Home</Link>
-      <Link to="/menu">Menu</Link>
-
-      {!isAdmin && user && <Link to="/cart">Cart</Link>}
-
-      {user ? (
-        <>
-          <span className="ml-2">
+      {/* Left: Welcome message or Login button */}
+      <div className="flex-1 w-7/12">
+        {user ? (
+          <span className="font-semibold truncate">
             Welcome, {displayName} 👋
           </span>
-
-          <button
-            onClick={handleOrdersClick}
-            className="border px-2 py-1 ml-2 rounded cursor-pointer"
+        ) : (
+          <Link
+            to="/login"
+            className="border px-3 py-1 rounded hover:bg-black hover:text-white p-2 transition"
           >
-            {isAdmin ? "Orders" : "My Orders"}
-          </button>
+            Login
+          </Link>
+        )}
+      </div>
 
-          <button
-            onClick={logout}
-            className="border px-2 py-1 ml-2 rounded hover:bg-black hover:text-white transition"
+      {/* Right: Burger Menu */}
+      <div className="md:hidden">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="focus:outline-none"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            Logout
-          </button>
-        </>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Menu Items */}
+      <div
+        className={`flex-col md:flex md:flex-row md:items-center md:gap-3 absolute md:static top-16 right-4 bg-gray-200 md:bg-transparent w-40 md:w-auto p-4 md:p-0 rounded shadow md:shadow-none transition-all duration-300 ${
+          isOpen ? "flex" : "hidden"
+        }`}
+      >
+        <Link to="/" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Home</Link>
+        <Link to="/menu" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Menu</Link>
+        {!isAdmin && user && (
+          <Link to="/cart" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Cart</Link>
+        )}
+        {user ? (
+          <>
+            <button
+              onClick={handleOrdersClick}
+              className="border px-2 py-1 rounded my-1 md:my-0"
+            >
+              {isAdmin ? "Orders" : "My Orders"}
+            </button>
+            <button
+              onClick={() => { logout(); setIsOpen(false); }}
+              className="border px-2 py-1 rounded hover:bg-black hover:text-white transition my-1 md:my-0"
+            >
+              Logout
+            </button>
+          </>
+        ) : null}
+      </div>
 
     </nav>
   );
