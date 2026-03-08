@@ -42,7 +42,7 @@ function Cart() {
         <div className="text-center py-10">
           <p className="text-gray-500 text-lg">Your cart is empty. Time to buy some snacks! 🍿</p>
           <button 
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/menu")}
             className="mt-4 text-green-600 font-semibold underline"
           >
             Go to Menu

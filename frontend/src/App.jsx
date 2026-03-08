@@ -7,6 +7,7 @@ import Cart from "./pages/Cart";
 import Navbar from "./components/Navbar";
 import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/register" element={<Register />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/cart" element={<Cart />} />

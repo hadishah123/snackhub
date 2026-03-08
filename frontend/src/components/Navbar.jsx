@@ -1,36 +1,53 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const isAdmin = user?.email === "admin@snackhub.com";
+
+  const handleOrdersClick = () => {
+    navigate(isAdmin ? "/admin" : "/orders");
+  };
+
+  const displayName = isAdmin
+    ? "Admin"
+    : user?.displayName || user?.email;
+
   return (
-    <nav style={{ padding: "20px", background: "#eee" }}>
-      <Link to="/">Home</Link> | 
-      <Link to="/menu"> Menu</Link> | 
-      <Link to="/cart"> Cart</Link> |
+    <nav className="p-5 bg-gray-200 flex items-center gap-3">
+
+      <Link to="/">Home</Link>
+      <Link to="/menu">Menu</Link>
+
+      {!isAdmin && user && <Link to="/cart">Cart</Link>}
 
       {user ? (
         <>
-          <span style={{ marginLeft: "10px" }}>
-            Welcome, {user.displayName} 👋
+          <span className="ml-2">
+            Welcome, {displayName} 👋
           </span>
-          <button className="border p-1 px-2 ml-2 rounded cursor-pointer" onClick={() => navigate("/orders")}>
-            My Orders
+
+          <button
+            onClick={handleOrdersClick}
+            className="border px-2 py-1 ml-2 rounded cursor-pointer"
+          >
+            {isAdmin ? "Orders" : "My Orders"}
           </button>
+
           <button
             onClick={logout}
-            className="border p-1 px-2 ml-2 border-white-2 hover:bg-black hover:text-white rounded transition"
+            className="border px-2 py-1 ml-2 rounded hover:bg-black hover:text-white transition"
           >
             Logout
           </button>
         </>
       ) : (
-        <Link to="/login"> Login</Link>
+        <Link to="/login">Login</Link>
       )}
+
     </nav>
   );
 }

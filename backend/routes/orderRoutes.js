@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
+const adminMiddleware = require("../middleware/adminMiddleware");
 
 /*
   1️⃣ CREATE ORDER
@@ -43,7 +44,7 @@ router.post("/", async (req, res) => {
 /*
   2️⃣ GET ALL ORDERS (Admin later)
 */
-router.get("/", async (req, res) => {
+router.get("/", adminMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
 
@@ -88,7 +89,7 @@ router.get("/:id", async (req, res) => {
 /*
   5️⃣ UPDATE ORDER STATUS
 */
-router.put("/:id/status", async (req, res) => {
+router.put("/:id/status", adminMiddleware, async (req, res) => {
   try {
     const { orderStatus } = req.body;
 
