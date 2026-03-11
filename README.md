@@ -145,6 +145,7 @@ A modern **MERN stack** application featuring **Firebase Hybrid Authentication**
 
 SnackHub demonstrates full-stack architecture, authentication security, and production-ready deployment structure.
 ---
+![Project Screenshot](./frontend/public/snackhub-preview.png)
 
 ## 🏗️ Suggested MERN Architecture
 ## 📦 Backend Structure (Node + Express)
