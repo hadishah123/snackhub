@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminMenu from "./pages/AdminMenu";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/menu" element={<Menu />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/admin/menu" element={<AdminMenu />} />
       </Routes>
     </BrowserRouter>
   );

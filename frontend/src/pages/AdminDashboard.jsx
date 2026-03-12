@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
-
+  
 function AdminDashboard() {
   const [orders, setOrders] = useState([]);
 
@@ -82,6 +82,10 @@ function AdminDashboard() {
 
           <p className="text-sm text-gray-500">
             {order.customerName}
+          </p>
+
+          <p className="text-xs text-gray-400">
+          {new Date(order.createdAt).toLocaleString()}
           </p>
 
           <div className="mt-2">

@@ -4,26 +4,110 @@
     "name": "Veg Momos",
     "description": "Steamed dumplings with mixed veggies",
     "price": 120,
-    "category": "Veg",
-    "image": "https://example.com/veg-momos.jpg",
-    "isAvailable": true
+    "category": "Momos",
+    "image": "/images/veg-momos.webp",
+    "available": true
   },
   {
     "_id": 2,
     "name": "Chicken Momos",
     "description": "Steamed dumplings with minced chicken",
     "price": 150,
-    "category": "Non-Veg",
-    "image": "https://example.com/chicken-momos.jpg",
-    "isAvailable": true
+    "category": "Momos",
+    "image": "/images/chicken-momos.webp",
+    "available": true
   },
   {
     "_id": 3,
     "name": "Paneer Momos",
     "description": "Stuffed with soft paneer and spices",
     "price": 130,
-    "category": "Veg",
-    "image": "https://example.com/paneer-momos.jpg",
-    "isAvailable": true
+    "category": "Momos",
+    "image": "/images/paneer-momos.webp",
+    "available": true
+  },
+
+  {
+    "_id": 4,
+    "name": "Chicken Sandwich",
+    "description": "Grilled sandwich with chicken filling",
+    "price": 180,
+    "category": "Sandwich",
+    "image": "https://example.com/chicken-sandwich.jpg",
+    "available": true
+  },
+  {
+    "_id": 5,
+    "name": "Paneer Sandwich",
+    "description": "Grilled sandwich stuffed with paneer and veggies",
+    "price": 160,
+    "category": "Sandwich",
+    "image": "https://example.com/paneer-sandwich.jpg",
+    "available": true
+  },
+  {
+    "_id": 6,
+    "name": "Corn Sandwich",
+    "description": "Creamy corn filling with toasted bread",
+    "price": 140,
+    "category": "Sandwich",
+    "image": "https://example.com/corn-sandwich.jpg",
+    "available": true
+  },
+
+  {
+    "_id": 7,
+    "name": "Blackcurrant Mocktail",
+    "description": "Refreshing blackcurrant flavored drink",
+    "price": 110,
+    "category": "Mocktail",
+    "image": "https://example.com/blackcurrant-mocktail.jpg",
+    "available": true
+  },
+  {
+    "_id": 8,
+    "name": "Mango Mocktail",
+    "description": "Sweet and tangy mango drink",
+    "price": 120,
+    "category": "Mocktail",
+    "image": "https://example.com/mango-mocktail.jpg",
+    "available": true
+  },
+  {
+    "_id": 9,
+    "name": "Pineapple Mocktail",
+    "description": "Chilled pineapple drink with citrus twist",
+    "price": 120,
+    "category": "Mocktail",
+    "image": "https://example.com/pineapple-mocktail.jpg",
+    "available": true
+  },
+
+  {
+    "_id": 10,
+    "name": "Chicken Wrap",
+    "description": "Soft tortilla wrap filled with grilled chicken",
+    "price": 170,
+    "category": "Wrap",
+    "image": "https://example.com/chicken-wrap.jpg",
+    "available": true
+  },
+  {
+    "_id": 11,
+    "name": "Paneer Wrap",
+    "description": "Wrap stuffed with spicy paneer and veggies",
+    "price": 160,
+    "category": "Wrap",
+    "image": "https://example.com/paneer-wrap.jpg",
+    "available": true
+  },
+  {
+    "_id": 12,
+    "name": "Veggie Wrap",
+    "description": "Healthy wrap filled with grilled vegetables",
+    "price": 150,
+    "category": "Wrap",
+    "image": "https://example.com/veggie-wrap.jpg",
+    "available": true
   }
 ]

@@ -64,17 +64,21 @@ function Navbar() {
       >
         <Link to="/" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Home</Link>
         <Link to="/menu" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Menu</Link>
-        {!isAdmin && user && (
-          <Link to="/cart" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Cart</Link>
-        )}
+        <Link to="/cart" className="py-1 md:py-0" onClick={() => setIsOpen(false)}>Cart</Link>
         {user ? (
           <>
             <button
               onClick={handleOrdersClick}
-              className="border px-2 py-1 rounded my-1 md:my-0"
+              className="border px-2 py-1 rounded my-1 cursor-pointer md:my-0"
             >
               {isAdmin ? "Orders" : "My Orders"}
             </button>
+            {isAdmin ? <button
+              onClick={() => navigate("/admin/menu")}
+              className="border px-2 py-1 rounded my-1 cursor-pointer md:my-0"
+            >
+            Manage Menu
+            </button> : null}
             <button
               onClick={() => { logout(); setIsOpen(false); }}
               className="border px-2 py-1 rounded hover:bg-black hover:text-white transition my-1 md:my-0"
