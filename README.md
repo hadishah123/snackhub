@@ -4,7 +4,16 @@ A modern **MERN stack** application featuring **Firebase Hybrid Authentication**
 
 ---
 
-![SnackHub Preview](./frontend/public/snackhub-preview.png)
+## 🌐 Live Demo & API
+- **Frontend (Vercel)**: [https://snackhub-nagpur.vercel.app](https://snackhub-nagpur.vercel.app)  
+- **Backend API**: [https://snackhub-backend.onrender.com](https://snackhub-backend.onrender.com)
+
+---
+## 🌟 Project Preview
+
+![SnackHub Preview](./frontend/public/snackhub-preview.png "SnackHub Full Stack Food Delivery App Preview")
+
+*Screenshot of the SnackHub frontend showcasing the landing page, menu, and cart.*
 
 SnackHub demonstrates **full-stack architecture**, **secure authentication**, and a **production-ready deployment structure**.
 
