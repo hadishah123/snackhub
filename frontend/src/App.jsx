@@ -9,21 +9,40 @@ import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminMenu from "./pages/AdminMenu";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
+
       <Routes>
-        <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/register" element={<Register />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/admin/menu" element={<AdminMenu />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
+
+        {/* ADMIN ROUTES */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/menu"
+          element={
+            <AdminRoute>
+              <AdminMenu />
+            </AdminRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
