@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"; 
 import axios from "../api/axios";
+
+// 🔥 Import socket client
+import socket from "../socket";
   
 function AdminDashboard() {
   const [orders, setOrders] = useState([]);
@@ -7,47 +10,65 @@ function AdminDashboard() {
   const storedUser = localStorage.getItem("user");
   const user = storedUser ? JSON.parse(storedUser) : null;
 
+  // Fetch all orders on mount
   useEffect(() => {
     if (!user?.email) return;
 
     const fetchOrders = async () => {
       try {
         const res = await axios.get("/api/orders", {
-          headers: {
-            "user-email": user.email
-          }
+          headers: { "user-email": user.email }
         });
 
         setOrders(res.data);
-
       } catch (error) {
         console.error("Error fetching orders", error);
       }
     };
 
     fetchOrders();
-
   }, [user?.email]);
 
+  // 🔥 Socket.IO listeners for real-time updates
+  useEffect(() => {
+    // New orders from customers
+    socket.on("newOrder", (order) => {
+      console.log("New order received:", order);
+      setOrders(prev => [order, ...prev]);
+    });
+
+    // Order status updates (for multiple admins)
+    socket.on("orderUpdated", (updatedOrder) => {
+      console.log("Order updated:", updatedOrder);
+      setOrders(prev =>
+        prev.map(order =>
+          order._id === updatedOrder._id ? updatedOrder : order
+        )
+      );
+    });
+
+    // Cleanup listeners on unmount
+    return () => {
+      socket.off("newOrder");
+      socket.off("orderUpdated");
+    };
+  }, []);
+
+  // Update order status via API
   const updateStatus = async (id, status) => {
     try {
-
       await axios.put(
         `/api/orders/${id}/status`,
         { orderStatus: status },
-        {
-          headers: { "user-email": user.email }
-        }
+        { headers: { "user-email": user.email } }
       );
 
+      // Optimistically update local state
       setOrders(prev =>
         prev.map(order =>
-          order._id === id
-            ? { ...order, orderStatus: status }
-            : order
+          order._id === id ? { ...order, orderStatus: status } : order
         )
       );
-
     } catch (error) {
       console.error("Error updating status", error);
     }
