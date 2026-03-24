@@ -6,19 +6,19 @@ import { useEffect, useState } from "react";
 function Menu() {
   const [menu, setMenu] = useState([]);
 
-useEffect(() => {
+  useEffect(() => {
 
-  const fetchMenu = async () => {
+    const fetchMenu = async () => {
 
-    const res = await axios.get("/api/menu");
+      const res = await axios.get("/api/menu");
 
-    setMenu(res.data);
+      setMenu(res.data);
 
-  };
+    };
 
-  fetchMenu();
+    fetchMenu();
 
-}, []);
+  }, []);
 
   return (
     <div className="p-4">

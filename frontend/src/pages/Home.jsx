@@ -1,5 +1,9 @@
+import WhatsAppButton from "./../components/WhatsAppButton";
+
 function Home() {
   return (
+  <>
+    <WhatsAppButton />
     <div className="min-h-screen bg-orange-50 flex flex-col items-center justify-center px-4">
       <h1 className="text-4xl md:text-6xl font-extrabold text-orange-600 mb-4 text-center">
         Welcome to SnackHub 🥟
@@ -8,6 +12,7 @@ function Home() {
         Best Momos in Town
       </p>
     </div>
+  </>
   );
 }
 
