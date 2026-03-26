@@ -32,6 +32,10 @@ const orderSchema = new mongoose.Schema(
       default: "COD",
     },
 
+    paymentId: {
+      type: String,
+    },
+
     orderStatus: {
       type: String,
       enum: ["pending", "confirmed", "preparing", "out_for_delivery", "delivered"],

@@ -62,8 +62,8 @@ function Cart() {
     const coords = JSON.parse(localStorage.getItem("userLocationCoords"));
     if (!coords) return alert("Please allow location access to place order.");
 
-    const dist = getDistance(SHOP_LOCATION.lat, SHOP_LOCATION.lng, coords.latitude, coords.longitude);
-    if (dist > 15) return alert("🚫 Delivery is only available within 15 KM.");
+    // const dist = getDistance(SHOP_LOCATION.lat, SHOP_LOCATION.lng, coords.latitude, coords.longitude);
+    if (distance > 15) return alert("🚫 Delivery is only available within 15 KM.");
 
     try {
       await axios.post("/api/orders", {
@@ -101,11 +101,76 @@ function Cart() {
 
     Total: ₹${totalAmount}
     Payment: Cash on Delivery
-    Location: https://www.google.com/maps?q=${coords?.latitude},${coords?.longitude || ""}`
+    Location: ${
+      coords
+        ? `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
+        : "Not shared"
+    }`
     ;
     const encoded = encodeURIComponent(message);
     const phone = "919545267216";
     window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank");
+  };
+
+  const handleRazorpayPayment = async () => {
+    if (!cartItems.length) return alert("Cart is empty!");
+
+    const coords = JSON.parse(localStorage.getItem("userLocationCoords"));
+    if (!coords) return alert("Please allow location access");
+
+    if (distance > 15) return alert("🚫 Delivery only within 15 KM");
+
+    try {
+      // 1️⃣ Create Razorpay order from backend
+      const { data } = await axios.post("/api/payment/create-order", {
+        amount: totalAmount,
+      });
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID, // frontend key
+        amount: data.amount,
+        currency: data.currency,
+        name: "SnackHub",
+        description: "Food Order Payment",
+        order_id: data.id,
+
+        handler: async function () {
+          // 2️⃣ On successful payment → save order
+          await axios.post("/api/orders", {
+            customerName: user?.displayName || "Guest",
+            customerEmail: user?.email || "",
+            customerPhone: user?.phoneNumber || "",
+            items: cartItems.map(item => ({
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity
+            })),
+            totalAmount,
+            paymentMethod: "Razorpay",
+          });
+
+          clearCart();
+          navigate("/order-success");
+        },
+
+        prefill: {
+          name: user?.displayName || "",
+          email: user?.email || "",
+          contact: user?.phoneNumber || "",
+        },
+
+        theme: {
+          color: "#16a34a", // green theme
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+    } catch (error) {
+      console.error("Razorpay error:", error);
+      alert("Payment failed. Try again.");
+    }
   };
 
   return (
@@ -157,19 +222,51 @@ function Cart() {
 
               {distance && (
                 <p className="text-sm text-gray-500 mt-2">
-                  📍 Delivery distance: {distance.toFixed(2)} km
+                  📍 Delivery distance: <strong>{distance.toFixed(2)} km</strong>
                 </p>
               )}
 
-              <button
-                onClick={placeOrder}
-                disabled={!cartItems.length}
-                className={`w-full py-4 mt-6 rounded-xl shadow-lg text-xl font-bold ${
-                  cartItems.length ? "bg-green-600 hover:bg-green-700 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                Place Order (Cash on Delivery)
-              </button>
+              {distance !== null && distance > 15 && (
+                <p className="text-red-500 text-sm mt-2">
+                  🚫 Delivery only within 15 km
+                </p>
+              )}
+
+              <div className="flex flex-col gap-3 mt-6">
+                <p className="text-sm text-gray-500 mt-4">Choose payment method</p>
+
+                {/* Reusable disabled logic */}
+                {(() => {
+                  const isDisabled = !cartItems.length || (distance !== null && distance > 15); 
+                  const disabledText = distance !== null && distance > 15 ? "Out of delivery range" : "";
+
+                  return (
+                    <>
+                      {/* COD Button */}
+                      <button
+                        onClick={placeOrder}
+                        disabled={isDisabled}
+                        className={`w-full py-4 rounded-xl text-lg font-bold ${
+                          isDisabled ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-green-600 hover:bg-green-700 text-white"
+                        }`}
+                      >
+                        {disabledText || "Cash on Delivery"}
+                      </button>
+
+                      {/* Razorpay Button */}
+                      <button
+                        onClick={handleRazorpayPayment}
+                        disabled={isDisabled}
+                        className={`w-full py-4 rounded-xl text-lg font-bold ${
+                          isDisabled ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-black hover:bg-gray-900 text-white"
+                        }`}
+                      >
+                        {disabledText || "Pay Online"}
+                      </button>
+                    </>
+                  );
+                })()}
+              </div>
             </div>
           </>
         )}
@@ -179,9 +276,15 @@ function Cart() {
       {cartItems && cartItems.length > 0 && (
         <button
           onClick={handleWhatsAppOrder}
-          className="fixed bottom-6 right-6 flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg z-50"
+          className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-4 py-3 rounded-full shadow-lg z-50 transition-all"
         >
+          {/* Mobile text */}
+          <span className="sm:hidden font-semibold">Order on</span>
+
+          {/* Icon */}
           <FaWhatsapp className="text-xl" />
+
+          {/* Desktop text */}
           <span className="hidden sm:inline font-semibold">WhatsApp</span>
         </button>
       )}

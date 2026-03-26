@@ -29,6 +29,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.23.0",
     "passport-google-oauth20": "^2.0.0",
+    "razorpay": "^2.9.6",
     "socket.io": "^4.8.3"
   },
   "devDependencies": {

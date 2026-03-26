@@ -7,7 +7,7 @@ function OrderSuccess() {
   useEffect(() => {
     // Redirect to home after 3 seconds
     const timer = setTimeout(() => {
-      navigate("/");
+      navigate("/menu");
     }, 3000);
 
     // Cleanup the timer on component unmount

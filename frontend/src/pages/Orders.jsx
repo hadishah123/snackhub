@@ -78,6 +78,7 @@ function Orders() {
             </div>
 
             <p className="mt-2 font-bold">₹{order.totalAmount}</p>
+            <p className="text-sm mt-1">Payment: {order.paymentMethod}</p>
             <p className="text-sm mt-1">Status: {order.orderStatus}</p>
           </div>
         ))}

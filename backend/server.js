@@ -31,8 +31,8 @@ app.use(cors({
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/foods", require("./routes/FoodRoutes"));
 app.use("/api/orders", orderRoutes);
+app.use("/api/payment", require("./routes/paymentRoutes"));
 app.use("/api/menu", menuRoutes);
-
 // Health Check
 app.get("/", (req, res) => {
   res.json({ message: "SnackHub API Running 🚀" });
