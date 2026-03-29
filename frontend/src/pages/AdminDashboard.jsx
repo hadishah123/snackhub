@@ -121,6 +121,22 @@ function AdminDashboard() {
             ₹{order.totalAmount}
           </p>
 
+          {order.location?.lat != null && order.location?.lng != null && (
+            <a
+              href={`https://www.google.com/maps?q=${order.location.lat},${order.location.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block bg-black text-white text-sm px-3 py-1 rounded"
+            >
+              📍 Open in Maps
+            </a>
+          )}
+
+          <span className="text-sm text-gray-500">
+            {order.distance != null
+              ? `${order.distance.toFixed(2)} km away`
+              : "Distance not available"}
+          </span>
           <p className="text-sm mt-1">
             Status: <span className="font-medium">{order.orderStatus}</span>
           </p>

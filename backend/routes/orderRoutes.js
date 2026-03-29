@@ -22,14 +22,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const order = await Order.create({
-      customerName,
-      customerEmail,
-      customerPhone,
-      items,
-      totalAmount,
-      paymentMethod,
-    });
+    const order = await Order.create({...req.body});
 
     // 🔥 Emit new order to admins
     const io = req.app.get("io");

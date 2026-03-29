@@ -32,6 +32,11 @@ const orderSchema = new mongoose.Schema(
       default: "COD",
     },
 
+    location: {
+      lat: Number,
+      lng: Number
+    },
+
     paymentId: {
       type: String,
     },

@@ -64,7 +64,7 @@ function Orders() {
           key={order._id}
           className="border p-4 rounded-lg mb-4"
           >
-            <p className="font-semibold">Order ID: {order._id.slice(-6)}</p>
+            <p className="font-semibold">Order ID: {order._id.toUpperCase().slice(-6)}</p>
             <p className="text-sm text-gray-500">
               {new Date(order.createdAt).toLocaleString()}
             </p>

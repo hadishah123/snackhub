@@ -73,6 +73,11 @@ function Cart() {
         items: cartItems.map((item) => ({ name: item.name, price: item.price, quantity: item.quantity })),
         totalAmount,
         paymentMethod: "COD",
+
+        location: {
+          lat: coords?.latitude,
+          lng: coords?.longitude
+        }
       });
 
       clearCart();
@@ -147,6 +152,11 @@ function Cart() {
             })),
             totalAmount,
             paymentMethod: "Razorpay",
+
+            location: {
+              lat: coords.latitude,
+              lng: coords.longitude
+            }
           });
 
           clearCart();
