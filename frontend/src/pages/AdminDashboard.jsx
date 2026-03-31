@@ -74,6 +74,23 @@ function AdminDashboard() {
     }
   };
 
+  const adminCancel = async (id) => {
+    try {
+      await axios.put(`/api/orders/admin/cancel/${id}`, {}, {
+        headers: { "user-email": user.email }
+      });
+
+      setOrders(prev =>
+        prev.map(o =>
+          o._id === id ? { ...o, orderStatus: "cancelled" } : o
+        )
+      );
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   // Helper function for button styles
   const getButtonClass = (currentStatus, buttonStatus, activeColor) => {
     if (currentStatus === buttonStatus) {
@@ -135,7 +152,8 @@ function AdminDashboard() {
           <span className="text-sm text-gray-500">
             {order.distance != null
               ? `${order.distance.toFixed(2)} km away`
-              : "Distance not available"}
+              : null}
+              {/* : "Distance not available"} */}
           </span>
           <p className="text-sm mt-1">
             Status: <span className="font-medium">{order.orderStatus}</span>
@@ -173,6 +191,16 @@ function AdminDashboard() {
               className={getButtonClass(order.orderStatus, "delivered", "bg-green-500")}
             >
               Delivered
+            </button>
+
+            <button
+              onClick={() => {
+                adminCancel(order._id);
+                updateStatus(order._id, "cancelled");
+              }}
+              className={getButtonClass(order.orderStatus, "cancelled", "bg-red-500")}
+            >
+              Cancel
             </button>
 
           </div>

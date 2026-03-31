@@ -116,12 +116,81 @@ router.put("/:id/status", adminMiddleware, async (req, res) => {
 /*
   6️⃣ DELETE ORDER (optional)
 */
-router.delete("/:id", async (req, res) => {
+// router.delete("/:id", async (req, res) => {
+//   try {
+//     await Order.findByIdAndDelete(req.params.id);
+//     res.json({ message: "Order deleted" });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// });
+
+// 6️⃣ CANCEL ORDER (Customer - within 5 mins)
+router.put("/cancel/:id", async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // ⏱️ Check 5 min limit
+    const now = new Date();
+    const orderTime = new Date(order.createdAt);
+    const diffMinutes = (now - orderTime) / (1000 * 60);
+
+    if (diffMinutes > 5) {
+      return res.status(400).json({
+        message: "Cancel time expired (5 min limit)"
+      });
+    }
+
+    if (order.orderStatus !== "pending") {
+      return res.status(400).json({
+        message: "Order already processed"
+      });
+    }
+
+    order.orderStatus = "cancelled";
+    order.isCancelled = true;
+
+    await order.save();
+
+    // 🔥 SOCKET EMIT
+    const io = req.app.get("io");
+    if (io) io.emit("orderUpdated", order);
+
+    res.json({ message: "Order cancelled", order });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ADMIN CANCEL (no time limit)
+router.put("/admin/cancel/:id", adminMiddleware, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    order.orderStatus = "cancelled";
+    order.isCancelled = true;
+
+    await order.save();
+
+    req.io.emit("orderUpdated", order);
+
+    res.json({ message: "Order cancelled by admin", order });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.delete("/admin/delete/:id", adminMiddleware, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
-    res.json({ message: "Order deleted" });
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    res.json({ message: "Order permanently deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed" });
   }
 });
 
