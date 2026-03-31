@@ -10,41 +10,43 @@ import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminMenu from "./pages/AdminMenu";
 import AdminRoute from "./components/AdminRoute";
+import { LocationProvider } from "./context/LocationProvider";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <LocationProvider>
+      <BrowserRouter>
+        <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/order-success" element={<OrderSuccess />} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
 
-        {/* ADMIN ROUTES */}
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminDashboard />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/menu"
-          element={
-            <AdminRoute>
-              <AdminMenu />
-            </AdminRoute>
-          }
-        />
-
-      </Routes>
-    </BrowserRouter>
+          {/* ADMIN ROUTES */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/menu"
+            element={
+              <AdminRoute>
+                <AdminMenu />
+              </AdminRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </LocationProvider>
   );
 }
 

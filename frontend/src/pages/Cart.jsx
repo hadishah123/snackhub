@@ -1,3 +1,4 @@
+import { LocationContext } from "../context/LocationContext";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
@@ -7,7 +8,10 @@ import { FaWhatsapp } from "react-icons/fa";
 
 function Cart() {
   // 🔹 Context
-  const { cartItems, totalAmount, removeFromCart, clearCart } = useContext(CartContext);
+  const { cartItems, totalAmount, removeFromCart, clearCart } =
+    useContext(CartContext);
+  const { locationEnabled, location, requestLocation } =
+    useContext(LocationContext);
   const { user } = useContext(AuthContext);
 
   // 🔹 Navigation
@@ -38,6 +42,28 @@ function Cart() {
     return R * c;
   };
 
+  // 🔹 New COD Button Handler
+  const handleCODClick = async () => {
+    if (!cartItems.length) return alert("Your cart is empty!");
+
+    let coords = location;
+    if (!locationEnabled) {
+      coords = await requestLocation(); // prompt user and wait
+      if (!coords) return; // user denied
+    }
+
+    // Calculate distance
+    const dist = getDistance(
+      SHOP_LOCATION.lat,
+      SHOP_LOCATION.lng,
+      coords.lat,
+      coords.lng,
+    );
+    if (dist > 15) return alert("🚫 Delivery is only available within 15 KM.");
+
+    placeOrder(coords); // pass the coords directly
+  };
+
   // 🔹 Get User Location
   useEffect(() => {
     if (!navigator.geolocation) return;
@@ -48,36 +74,43 @@ function Cart() {
         const coords = { latitude, longitude };
         localStorage.setItem("userLocationCoords", JSON.stringify(coords));
 
-        const dist = getDistance(SHOP_LOCATION.lat, SHOP_LOCATION.lng, latitude, longitude);
+        const dist = getDistance(
+          SHOP_LOCATION.lat,
+          SHOP_LOCATION.lng,
+          latitude,
+          longitude,
+        );
         setDistance(dist);
       },
-      (error) => console.log("Location error:", error)
+      (error) => console.log("Location error:", error),
     );
   }, [SHOP_LOCATION.lat, SHOP_LOCATION.lng]);
 
   // 🔹 Place Order
-  const placeOrder = async () => {
-    if (!cartItems || cartItems.length === 0) return alert("Your cart is empty!");
-
-    const coords = JSON.parse(localStorage.getItem("userLocationCoords"));
+  const placeOrder = async (coordsParam) => {
+    const coords =
+      coordsParam || JSON.parse(localStorage.getItem("userLocationCoords"));
     if (!coords) return alert("Please allow location access to place order.");
 
-    // const dist = getDistance(SHOP_LOCATION.lat, SHOP_LOCATION.lng, coords.latitude, coords.longitude);
-    if (distance > 15) return alert("🚫 Delivery is only available within 15 KM.");
+    if (distance > 15)
+      return alert("🚫 Delivery is only available within 15 KM.");
 
     try {
       await axios.post("/api/orders", {
         customerName: user?.displayName || "Guest",
         customerEmail: user?.email || "",
         customerPhone: user?.phoneNumber || "",
-        items: cartItems.map((item) => ({ name: item.name, price: item.price, quantity: item.quantity })),
+        items: cartItems.map((item) => ({
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
         totalAmount,
         paymentMethod: "COD",
-
         location: {
-          lat: coords?.latitude,
-          lng: coords?.longitude
-        }
+          lat: coords.lat || coords.latitude,
+          lng: coords.lng || coords.longitude,
+        },
       });
 
       clearCart();
@@ -94,24 +127,26 @@ function Cart() {
 
     const coords = JSON.parse(localStorage.getItem("userLocationCoords"));
     const message = `
-    *New Order - SnackHub*
+*New Order - SnackHub*
 
-    Name: ${user?.displayName || "Guest"}
-    Phone: ${user?.phoneNumber || "N/A"}
+Name: ${user?.displayName || "Guest"}
+Phone: ${user?.phoneNumber || "N/A"}
 
-    Items:
-    ${cartItems
-      .map((item) => `- ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}`)
-      .join("\n")}
+Items:
+${cartItems
+  .map(
+    (item) =>
+      `- ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}`,
+  )
+  .join("\n")}
 
-    Total: ₹${totalAmount}
-    Payment: Cash on Delivery
-    Location: ${
+Total: ₹${totalAmount}
+Payment: Cash on Delivery
+Location: ${
       coords
         ? `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
         : "Not shared"
-    }`
-    ;
+    }`;
     const encoded = encodeURIComponent(message);
     const phone = "919545267216";
     window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank");
@@ -145,18 +180,18 @@ function Cart() {
             customerName: user?.displayName || "Guest",
             customerEmail: user?.email || "",
             customerPhone: user?.phoneNumber || "",
-            items: cartItems.map(item => ({
+            items: cartItems.map((item) => ({
               name: item.name,
               price: item.price,
-              quantity: item.quantity
+              quantity: item.quantity,
             })),
             totalAmount,
             paymentMethod: "Razorpay",
 
             location: {
               lat: coords.latitude,
-              lng: coords.longitude
-            }
+              lng: coords.longitude,
+            },
           });
 
           clearCart();
@@ -176,7 +211,6 @@ function Cart() {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
-
     } catch (error) {
       console.error("Razorpay error:", error);
       alert("Payment failed. Try again.");
@@ -190,7 +224,9 @@ function Cart() {
 
         {!cartItems || cartItems.length === 0 ? (
           <div className="text-center py-10">
-            <p className="text-gray-500 text-lg">Your cart is empty. Time to buy some snacks! 🍿</p>
+            <p className="text-gray-500 text-lg">
+              Your cart is empty. Time to buy some snacks! 🍿
+            </p>
             <button
               onClick={() => navigate("/menu")}
               className="mt-4 text-green-600 font-semibold underline"
@@ -203,7 +239,10 @@ function Cart() {
             {/* Cart Items */}
             <div className="space-y-4">
               {cartItems.map((item) => (
-                <div key={item._id} className="flex justify-between items-center border-b pb-4">
+                <div
+                  key={item._id}
+                  className="flex justify-between items-center border-b pb-4"
+                >
                   <div>
                     <h3 className="font-bold text-gray-700">{item.name}</h3>
                     <p className="text-sm text-gray-500">
@@ -211,7 +250,9 @@ function Cart() {
                     </p>
                   </div>
                   <div className="flex items-center gap-6">
-                    <p className="font-bold text-lg">₹{item.price * item.quantity}</p>
+                    <p className="font-bold text-lg">
+                      ₹{item.price * item.quantity}
+                    </p>
                     <button
                       onClick={() => removeFromCart(item._id)}
                       className="bg-red-50 text-red-500 px-3 py-1 rounded-md hover:bg-red-500 hover:text-white transition-all text-sm"
@@ -226,13 +267,18 @@ function Cart() {
             {/* Total Section */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex justify-between items-center">
-                <span className="text-xl font-medium text-gray-600">Total Amount:</span>
-                <span className="text-3xl font-black text-green-600">₹{totalAmount}</span>
+                <span className="text-xl font-medium text-gray-600">
+                  Total Amount:
+                </span>
+                <span className="text-3xl font-black text-green-600">
+                  ₹{totalAmount}
+                </span>
               </div>
 
               {distance && (
                 <p className="text-sm text-gray-500 mt-2">
-                  📍 Delivery distance: <strong>{distance.toFixed(2)} km</strong>
+                  📍 Delivery distance:{" "}
+                  <strong>{distance.toFixed(2)} km</strong>
                 </p>
               )}
 
@@ -243,35 +289,54 @@ function Cart() {
               )}
 
               <div className="flex flex-col gap-3 mt-6">
-                <p className="text-sm text-gray-500 mt-4">Choose payment method</p>
+                <p className="text-sm text-gray-500 mt-4">
+                  Choose payment method
+                </p>
 
                 {/* Reusable disabled logic */}
                 {(() => {
-                  const isDisabled = !cartItems.length || (distance !== null && distance > 15); 
-                  const disabledText = distance !== null && distance > 15 ? "Out of delivery range" : "";
+                  const isCODDisabled =
+                    !cartItems.length ||
+                    !locationEnabled ||
+                    (distance !== null && distance > 15);
+                  const codDisabledText = !locationEnabled
+                    ? "Enable location for COD"
+                    : distance !== null && distance > 15
+                      ? "Out of delivery range"
+                      : "";
 
                   return (
                     <>
                       {/* COD Button */}
                       <button
-                        onClick={placeOrder}
-                        disabled={isDisabled}
+                        onClick={handleCODClick}
+                        disabled={isCODDisabled}
                         className={`w-full py-4 rounded-xl text-lg font-bold ${
-                          isDisabled ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-green-600 hover:bg-green-700 text-white"
+                          isCODDisabled
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-green-600 hover:bg-green-700 text-white"
                         }`}
                       >
-                        {disabledText || "Cash on Delivery"}
+                        {codDisabledText || "Cash on Delivery"}
                       </button>
 
                       {/* Razorpay Button */}
                       <button
                         onClick={handleRazorpayPayment}
-                        disabled={isDisabled}
+                        disabled={
+                          !cartItems.length ||
+                          (distance !== null && distance > 15)
+                        }
                         className={`w-full py-4 rounded-xl text-lg font-bold ${
-                          isDisabled ? "bg-gray-300 text-gray-500 cursor-not-allowed" : "bg-black hover:bg-gray-900 text-white"
+                          !cartItems.length ||
+                          (distance !== null && distance > 15)
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-black hover:bg-gray-900 text-white"
                         }`}
                       >
-                        {disabledText || "Pay Online"}
+                        {distance !== null && distance > 15
+                          ? "Out of delivery range"
+                          : "Pay Online"}
                       </button>
                     </>
                   );

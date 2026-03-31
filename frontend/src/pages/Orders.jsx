@@ -41,17 +41,16 @@ function Orders() {
   const cancelOrder = async (id) => {
     try {
       const res = await axios.put(`/api/orders/cancel/${id}`);
-      
+
       // Update local state
-      setOrders(prev =>
-        prev.map(o =>
-          o._id === id ? { ...o, orderStatus: "cancelled" } : o
-        )
+      setOrders((prev) =>
+        prev.map((o) =>
+          o._id === id ? { ...o, orderStatus: "cancelled" } : o,
+        ),
       );
 
       // 🔥 Emit socket event so admins know
       socket.emit("orderUpdated", res.data); // assuming res.data is updated order
-
     } catch (err) {
       console.error("Cancel error:", err);
       console.error("Response:", err.response);
@@ -67,8 +66,8 @@ function Orders() {
       // Only update orders that belong to the current user
       setOrders((prev) =>
         prev.map((order) =>
-          order._id === updatedOrder._id ? updatedOrder : order
-        )
+          order._id === updatedOrder._id ? updatedOrder : order,
+        ),
       );
     });
     // Cleanup listener on unmount
@@ -79,19 +78,18 @@ function Orders() {
 
   return (
     <>
-      <WhatsAppButton/>
-      <CallButton/>
+      <WhatsAppButton />
+      <CallButton />
       <div className="max-w-md mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Your Orders</h1>
 
         {orders.length === 0 && <p>No orders yet.</p>}
 
         {orders.map((order) => (
-          <div
-          key={order._id}
-          className="border p-4 rounded-lg mb-4"
-          >
-            <p className="font-semibold">Order ID: {order._id.toUpperCase().slice(-6)}</p>
+          <div key={order._id} className="border p-4 rounded-lg mb-4">
+            <p className="font-semibold">
+              Order ID: {order._id.toUpperCase().slice(-6)}
+            </p>
             <p className="text-sm text-gray-500">
               {new Date(order.createdAt).toLocaleString()}
             </p>
@@ -111,7 +109,8 @@ function Orders() {
               const elapsed = timeNow - new Date(order.createdAt);
               const remaining = 5 * 60 * 1000 - elapsed;
 
-              const canCancel = remaining > 0 && order.orderStatus === "pending";
+              const canCancel =
+                remaining > 0 && order.orderStatus === "pending";
 
               const minutes = Math.floor(remaining / 60000);
               const seconds = Math.floor((remaining % 60000) / 1000);
@@ -126,13 +125,15 @@ function Orders() {
                   </button>
 
                   <p className="text-xs text-red-500 mt-1 flex items-center gap-1 font-semibold animate-pulse">
-                    ⚠️ Act fast! Cancel available for {minutes}:{String(seconds).padStart(2, "0")}. Call the owner for faster service.
+                    ⚠️ Act fast! Cancel available for {minutes}:
+                    {String(seconds).padStart(2, "0")}. Call the owner for
+                    faster service.
                   </p>
                 </>
               ) : (
                 <p className="text-xs text-gray-500 mt-1">
                   Call the owner for faster service.
-                </p>    
+                </p>
               );
             })()}
           </div>
