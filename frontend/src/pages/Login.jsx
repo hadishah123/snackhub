@@ -118,7 +118,7 @@ function Login() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-8 border border-gray-300 rounded-xl font-sans shadow-lg">
+    <div className="max-w-md mx-auto mt-12 p-8 border border-gray-300 rounded-xl font-sans shadow-lg" onLoad={handleGoogleLogin}>
       <h2 className="text-center mb-5 text-2xl font-semibold">Login to SnackHub</h2>
 
       {error && (

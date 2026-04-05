@@ -7,6 +7,9 @@ import axios from "../api/axios";
 import { FaWhatsapp } from "react-icons/fa";
 
 function Cart() {
+  const [phoneInput, setPhoneInput] = useState("");
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
+  const [paymentType, setPaymentType] = useState(null);
   // 🔹 Context
   const { cartItems, totalAmount, removeFromCart, clearCart } =
     useContext(CartContext);
@@ -43,7 +46,7 @@ function Cart() {
   };
 
   // 🔹 New COD Button Handler
-  const handleCODClick = async () => {
+  const handleCODClick = async (phone) => {
     if (!cartItems.length) return alert("Your cart is empty!");
 
     let coords = location;
@@ -61,7 +64,7 @@ function Cart() {
     );
     if (dist > 15) return alert("🚫 Delivery is only available within 15 KM.");
 
-    placeOrder(coords); // pass the coords directly
+    placeOrder(coords, phone); // pass the coords directly
   };
 
   // 🔹 Get User Location
@@ -87,19 +90,19 @@ function Cart() {
   }, [SHOP_LOCATION.lat, SHOP_LOCATION.lng]);
 
   // 🔹 Place Order
-  const placeOrder = async (coordsParam) => {
+  const placeOrder = async (coordsParam, phone) => {
     const coords =
       coordsParam || JSON.parse(localStorage.getItem("userLocationCoords"));
     if (!coords) return alert("Please allow location access to place order.");
 
-    if (distance > 15)
+    if (distance !== null && distance > 15)
       return alert("🚫 Delivery is only available within 15 KM.");
 
     try {
       await axios.post("/api/orders", {
         customerName: user?.displayName || "Guest",
         customerEmail: user?.email || "",
-        customerPhone: user?.phoneNumber || "",
+        customerPhone: phone,
         items: cartItems.map((item) => ({
           name: item.name,
           price: item.price,
@@ -152,13 +155,14 @@ Location: ${
     window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank");
   };
 
-  const handleRazorpayPayment = async () => {
+  const handleRazorpayPayment = async (phone) => {
     if (!cartItems.length) return alert("Cart is empty!");
 
     const coords = JSON.parse(localStorage.getItem("userLocationCoords"));
     if (!coords) return alert("Please allow location access");
 
-    if (distance > 15) return alert("🚫 Delivery only within 15 KM");
+    if (distance !== null && distance > 15)
+      return alert("🚫 Delivery only within 15 KM");
 
     try {
       // 1️⃣ Create Razorpay order from backend
@@ -179,7 +183,7 @@ Location: ${
           await axios.post("/api/orders", {
             customerName: user?.displayName || "Guest",
             customerEmail: user?.email || "",
-            customerPhone: user?.phoneNumber || "",
+            customerPhone: phone,
             items: cartItems.map((item) => ({
               name: item.name,
               price: item.price,
@@ -201,7 +205,7 @@ Location: ${
         prefill: {
           name: user?.displayName || "",
           email: user?.email || "",
-          contact: user?.phoneNumber || "",
+          contact: phone,
         },
 
         theme: {
@@ -309,7 +313,10 @@ Location: ${
                     <>
                       {/* COD Button */}
                       <button
-                        onClick={handleCODClick}
+                        onClick={() => {
+                          setPaymentType("COD");
+                          setShowPhoneModal(true);
+                        }}
                         disabled={isCODDisabled}
                         className={`w-full py-4 rounded-xl text-lg font-bold ${
                           isCODDisabled
@@ -322,7 +329,10 @@ Location: ${
 
                       {/* Razorpay Button */}
                       <button
-                        onClick={handleRazorpayPayment}
+                        onClick={() => {
+                          setPaymentType("RAZORPAY");
+                          setShowPhoneModal(true);
+                        }}
                         disabled={
                           !cartItems.length ||
                           (distance !== null && distance > 15)
@@ -362,6 +372,49 @@ Location: ${
           {/* Desktop text */}
           <span className="hidden sm:inline font-semibold">WhatsApp</span>
         </button>
+      )}
+      {showPhoneModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-end justify-center z-50">
+          <div className="bg-white w-full max-w-md p-5 rounded-t-2xl">
+            <h2 className="text-lg font-bold mb-3">Enter Phone Number</h2>
+
+            <input
+              type="tel"
+              placeholder="10-digit phone number"
+              value={phoneInput}
+              onChange={(e) => setPhoneInput(e.target.value.replace(/\D/g, ""))}
+              maxLength={10}
+              className="w-full border p-3 rounded mb-3"
+            />
+
+            <button
+              onClick={async () => {
+                if (phoneInput.length !== 10) {
+                  alert("Enter valid phone number");
+                  return;
+                }
+
+                setShowPhoneModal(false);
+
+                if (paymentType === "COD") {
+                  handleCODClick(phoneInput);
+                } else {
+                  handleRazorpayPayment(phoneInput);
+                }
+              }}
+              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold"
+            >
+              Continue
+            </button>
+
+            <button
+              onClick={() => setShowPhoneModal(false)}
+              className="w-full mt-2 text-gray-500"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

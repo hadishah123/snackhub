@@ -124,14 +124,17 @@ function Orders() {
                     Cancel Order
                   </button>
 
-                  <p className="text-xs text-red-500 mt-1 flex items-center gap-1 font-semibold animate-pulse">
+                  <p className="text-xs text-red-500 mt-1 flex items-center gap-1 font-semibold animate-pulse" >
                     ⚠️ Act fast! Cancel available for {minutes}:
                     {String(seconds).padStart(2, "0")}. Call the owner for
                     faster service.
                   </p>
                 </>
               ) : (
-                <p className="text-xs text-gray-500 mt-1">
+                <p
+                  className="text-xs text-gray-500 mt-1 cursor-pointer hover:underline"
+                  onClick={() => window.location.href = "tel:919545267216"}
+                >
                   Call the owner for faster service.
                 </p>
               );
