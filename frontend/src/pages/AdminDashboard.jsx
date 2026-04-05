@@ -127,6 +127,11 @@ function AdminDashboard() {
 
           <p className="font-bold mt-2">₹{order.totalAmount}</p>
 
+          <p className="text-sm text-gray-500 mt-1">
+            Payment:{" "}
+            <span className="font-bold">{order.paymentMethod || "N/A"}</span>
+          </p>
+
           <div className="mt-2 flex gap-2">
             {order.customerPhone && (
               <a

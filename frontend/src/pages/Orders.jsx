@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 import WhatsAppButton from "../components/WhatsAppButton";
 import socket from "../socket";
 import CallButton from "../components/CallButton";
+import OrderProgress from "../components/OrderProgress";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -105,6 +106,7 @@ function Orders() {
             <p className="mt-2 font-bold">₹{order.totalAmount}</p>
             <p className="text-sm mt-1">Payment: {order.paymentMethod}</p>
             <p className="text-sm mt-1">Status: {order.orderStatus}</p>
+            <OrderProgress status={order.orderStatus} />
             {(() => {
               const elapsed = timeNow - new Date(order.createdAt);
               const remaining = 5 * 60 * 1000 - elapsed;
