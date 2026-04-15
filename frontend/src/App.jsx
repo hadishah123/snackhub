@@ -11,13 +11,14 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminMenu from "./pages/AdminMenu";
 import AdminRoute from "./components/AdminRoute";
 import { LocationProvider } from "./context/LocationProvider";
+import MobileBottomNav from "./components/MobileBottomNav";
 
 function App() {
   return (
     <LocationProvider>
       <BrowserRouter>
         <Navbar />
-
+        <MobileBottomNav />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

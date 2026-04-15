@@ -130,22 +130,22 @@ function Cart() {
 
     const coords = JSON.parse(localStorage.getItem("userLocationCoords"));
     const message = `
-*New Order - SnackHub*
+    *New Order - SnackHub*
 
-Name: ${user?.displayName || "Guest"}
-Phone: ${user?.phoneNumber || "N/A"}
+    Name: ${user?.displayName || "Guest"}
+    Phone: ${user?.phoneNumber || "N/A"}
 
-Items:
-${cartItems
-  .map(
-    (item) =>
-      `- ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}`,
-  )
-  .join("\n")}
+    Items:
+    ${cartItems
+      .map(
+        (item) =>
+          `- ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}`,
+      )
+      .join("\n")}
 
-Total: ₹${totalAmount}
-Payment: Cash on Delivery
-Location: ${
+    Total: ₹${totalAmount}
+    Payment: Cash on Delivery
+    Location: ${
       coords
         ? `https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`
         : "Not shared"
@@ -361,7 +361,7 @@ Location: ${
       {cartItems && cartItems.length > 0 && (
         <button
           onClick={handleWhatsAppOrder}
-          className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-4 py-3 rounded-full shadow-lg z-50 transition-all"
+          className="fixed bottom-6 mb-9 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-4 py-3 rounded-full shadow-lg z-50 transition-all"
         >
           {/* Mobile text */}
           <span className="sm:hidden font-semibold">Order on</span>

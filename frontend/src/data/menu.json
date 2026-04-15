@@ -5,7 +5,7 @@
     "description": "Steamed dumplings with mixed veggies",
     "price": 120,
     "category": "Momos",
-    "image": "/images/veg-momos.webp",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821450/veg-momos_afxfcx.webp",
     "available": true
   },
   {
@@ -14,7 +14,7 @@
     "description": "Steamed dumplings with minced chicken",
     "price": 150,
     "category": "Momos",
-    "image": "/images/chicken-momos.webp",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821450/chicken-momos_jwxucx.webp",
     "available": true
   },
   {
@@ -23,7 +23,7 @@
     "description": "Stuffed with soft paneer and spices",
     "price": 130,
     "category": "Momos",
-    "image": "/images/paneer-momos.webp",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821450/paneer-momos_p1xlng.webp",
     "available": true
   },
 
@@ -33,7 +33,7 @@
     "description": "Grilled sandwich with chicken filling",
     "price": 180,
     "category": "Sandwich",
-    "image": "https://example.com/chicken-sandwich.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/Chicken-Sandwich-7-160x160_izke0g.webp",
     "available": true
   },
   {
@@ -42,7 +42,7 @@
     "description": "Grilled sandwich stuffed with paneer and veggies",
     "price": 160,
     "category": "Sandwich",
-    "image": "https://example.com/paneer-sandwich.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/Chicken-Sandwich-7-160x160_izke0g.webp",
     "available": true
   },
   {
@@ -51,7 +51,7 @@
     "description": "Creamy corn filling with toasted bread",
     "price": 140,
     "category": "Sandwich",
-    "image": "https://example.com/corn-sandwich.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/Chicken-Sandwich-7-160x160_izke0g.webp",
     "available": true
   },
 
@@ -61,7 +61,7 @@
     "description": "Refreshing blackcurrant flavored drink",
     "price": 110,
     "category": "Mocktail",
-    "image": "https://example.com/blackcurrant-mocktail.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/black-currant-sparkle-mocktail-1723328349-fcdb-1_rfcf0d.webp",
     "available": true
   },
   {
@@ -70,7 +70,7 @@
     "description": "Sweet and tangy mango drink",
     "price": 120,
     "category": "Mocktail",
-    "image": "https://example.com/mango-mocktail.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821813/mango-mocktail-022_ugqxgi.webp",
     "available": true
   },
   {
@@ -79,7 +79,7 @@
     "description": "Chilled pineapple drink with citrus twist",
     "price": 120,
     "category": "Mocktail",
-    "image": "https://example.com/pineapple-mocktail.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821813/Pineapple-Mocktail-Hand-Holding-Glass_fadvcz.webp",
     "available": true
   },
 
@@ -89,7 +89,7 @@
     "description": "Soft tortilla wrap filled with grilled chicken",
     "price": 170,
     "category": "Wrap",
-    "image": "https://example.com/chicken-wrap.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/Grilled-Chicken-WrapsKey2-300x300_oijwhy.webp",
     "available": true
   },
   {
@@ -98,7 +98,7 @@
     "description": "Wrap stuffed with spicy paneer and veggies",
     "price": 160,
     "category": "Wrap",
-    "image": "https://example.com/paneer-wrap.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/Grilled-Chicken-WrapsKey2-300x300_oijwhy.webp",
     "available": true
   },
   {
@@ -107,7 +107,7 @@
     "description": "Healthy wrap filled with grilled vegetables",
     "price": 150,
     "category": "Wrap",
-    "image": "https://example.com/veggie-wrap.jpg",
+    "image": "https://res.cloudinary.com/dlj2gfu2n/image/upload/v1775821812/Grilled-Chicken-WrapsKey2-300x300_oijwhy.webp",
     "available": true
   }
 ]

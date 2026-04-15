@@ -7,11 +7,11 @@ function ProductCard({ product }) {
   const { locationEnabled, getLocation } = useContext(LocationContext);
 
   const item = cartItems.find((i) => i._id === product._id);
-  const quantity = item ? item.quantity : 0;
+  const quantity = item?.quantity || 0;
 
-  const handleAddClick = () => {
+  const handleAddClick = async () => {
     if (!locationEnabled) {
-      getLocation();
+      await getLocation();
       return;
     }
     dispatch({ type: "ADD_TO_CART", payload: product });
@@ -28,46 +28,57 @@ function ProductCard({ product }) {
   };
 
   return (
-    <div className="border rounded-lg p-4 shadow-sm flex flex-col justify-between">
-      <div>
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-48 object-cover rounded-lg"
-        />
-        <h3 className="text-md font-semibold">{product.name}</h3>
-        <p className="text-gray-600 text-sm mt-1">{product.description}</p>
-        <p className="text-gray-600 text-sm">₹{product.price}</p>
-      </div>
+    <div className="flex justify-between gap-4 py-4 border-b border-gray-400 last:border-none">
+      
+      {/* LEFT CONTENT */}
+      <div className="flex-1">
+        <h3 className="text-base font-semibold">{product.name}</h3>
+        <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+          {product.description}
+        </p>
+        <p className="mt-2 font-medium text-sm">
+          ₹{product.price}
+        </p>
 
-      <div className="mt-3">
         {!locationEnabled && (
-          <p className="text-red-500 text-sm mb-2">
-            Enable location to order 
+          <p className="text-red-500 text-xs mt-1">
+            Enable location to order
           </p>
         )}
+      </div>
 
+      {/* RIGHT IMAGE + BUTTON */}
+      <div className="relative w-28 h-28 shrink-0">
+        <img
+          src={product.image || "/placeholder.png"}
+          alt={product.name}
+          className="w-full h-full object-cover rounded-lg"
+        />
+
+        {/* BUTTON OVER IMAGE */}
         {!product.isAvailable ? (
           <button
             disabled
-            className="w-full bg-gray-300 text-gray-600 py-2 rounded cursor-not-allowed"
+            className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-gray-200 text-gray-500 px-4 py-1 text-sm rounded"
           >
-            Out of Stock
+            Out
           </button>
         ) : quantity === 0 ? (
           <button
             onClick={handleAddClick}
-            className="w-full bg-black text-white py-2 rounded"
+            className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white border border-gray-300 text-green-600 font-semibold px-4 py-1 text-sm rounded shadow"
           >
-            Add
+            ADD
           </button>
         ) : (
-          <div className="flex items-center justify-between border rounded">
-            <button onClick={decrease} className="px-3 py-1 text-lg">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center bg-white border rounded shadow">
+            <button onClick={decrease} className="px-2 text-lg">
               −
             </button>
-            <span className="font-semibold">{quantity}</span>
-            <button onClick={increase} className="px-3 py-1 text-lg">
+            <span className="px-2 text-sm font-medium">
+              {quantity}
+            </span>
+            <button onClick={increase} className="px-2 text-lg text-green-600">
               +
             </button>
           </div>

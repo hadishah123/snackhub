@@ -1,26 +1,41 @@
-import { useState } from 'react';
-import { LocationContext } from './LocationContext';
+import { useState } from "react";
+import { LocationContext } from "./LocationContext";
 
 export const LocationProvider = ({ children }) => {
-  const [location, setLocation] = useState(null);
-  const [locationEnabled, setLocationEnabled] = useState(false);
+  // ✅ Load from localStorage on first render
+  const savedLocation = localStorage.getItem("userLocationCoords");
+
+  const [location, setLocation] = useState(
+    savedLocation ? JSON.parse(savedLocation) : null
+  );
+
+  const [locationEnabled, setLocationEnabled] = useState(
+    !!savedLocation
+  );
 
   const getLocation = () => {
     if (!navigator.geolocation) {
-      alert('Geolocation not supported');
+      alert("Geolocation not supported");
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLocation({
+        const coords = {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
-        });
+        };
+
+        localStorage.setItem(
+          "userLocationCoords",
+          JSON.stringify(coords)
+        );
+
+        setLocation(coords);
         setLocationEnabled(true);
       },
       () => {
-        alert('Please enable location to continue');
+        alert("Please enable location to continue");
         setLocationEnabled(false);
       }
     );

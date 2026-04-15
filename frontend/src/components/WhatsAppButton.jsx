@@ -83,7 +83,7 @@ Can you help me with this order?`
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-5 py-3 rounded-full shadow-lg z-50 transition-all"
+      className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-5 py-3 rounded-full shadow-lg z-50 transition-all mb-9"
     >
       <span className="sm:hidden font-semibold">Chat</span>
       <FaWhatsapp className="text-xl" />

@@ -2,36 +2,49 @@ import ProductCard from "../components/ProductCard";
 import StickyCartButton from "../components/StickyCartButton";
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
+import MenuSkeleton from "../components/MenuSkeleton";
+import EmptyState from "../components/EmptyState";
 
 function Menu() {
   const [menu, setMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMenu = async () => {
-      const res = await axios.get("/api/menu");
-
-      setMenu(res.data);
+      try {
+        const res = await axios.get("/api/menu");
+        setMenu(res.data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load menu");
+      } finally {
+        setLoading(false);
+      }
     };
-
     fetchMenu();
   }, []);
 
   return (
-    <div className="p-4">
-      <div
-        className="grid gap-4
-                      grid-cols-1       /* mobile default: 1 column */
-                      sm:grid-cols-2    /* small screens >= 640px: 2 columns */
-                      md:grid-cols-3    /* medium screens >= 768px: 3 columns */
-                      lg:grid-cols-4    /* large screens >= 1024px: 4 columns */
-                      xl:grid-cols-5" /* extra large screens >= 1280px: 5 columns */
-      >
-        {menu.map((food) => (
-          <ProductCard key={food._id} product={food} />
-        ))}
-      </div>
+    <>
+      {error ? (
+        <EmptyState title="Error" description={error} />
+      ) : loading ? (
+        <MenuSkeleton />
+      ) : menu.length === 0 ? (
+        <EmptyState
+          title="No food available 🍽️"
+          description="Please check back later"
+        />
+      ) : (
+        <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8 gap-6 pb-24">
+          {menu.map((food) => (
+            <ProductCard key={food._id} product={food} />
+          ))}
+        </div>
+      )}
       <StickyCartButton />
-    </div>
+    </>
   );
 }
 
