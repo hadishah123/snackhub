@@ -4,11 +4,17 @@ import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import MenuSkeleton from "../components/MenuSkeleton";
 import EmptyState from "../components/EmptyState";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import ManageMenu from "../components/ManageMenu";
 
 function Menu() {
   const [menu, setMenu] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user } = useContext(AuthContext);
+
+  const isAdmin = user?.email === "admin@snackhub.com";
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -37,12 +43,13 @@ function Menu() {
           description="Please check back later"
         />
       ) : (
-        <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8 gap-6 pb-24">
+        <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8 gap-6 pb-28">
           {menu.map((food) => (
             <ProductCard key={food._id} product={food} />
           ))}
         </div>
       )}
+      {isAdmin && <ManageMenu />}
       <StickyCartButton />
     </>
   );

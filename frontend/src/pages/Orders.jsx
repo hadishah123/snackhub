@@ -1,17 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "../api/axios";
-import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
 import WhatsAppButton from "../components/WhatsAppButton";
 import socket from "../socket";
 import CallButton from "../components/CallButton";
 import OrderProgress from "../components/OrderProgress";
 import OrderSkeleton from "../components/OrderSkeleton";
 import EmptyState from "../components/EmptyState";
+import AdminOrdersButton from "../components/AdminOrdersButton";
+import { AuthContext } from "../context/AuthContext";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timeNow, setTimeNow] = useState(new Date());
+  const { user } = useContext(AuthContext);
+
+  const isAdmin = user?.email === "admin@snackhub.com";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,14 +29,11 @@ function Orders() {
   // Fetch orders initially
   useEffect(() => {
     const fetchOrders = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-
       if (!user) return;
 
+      setLoading(true);
       try {
         const res = await axios.get(`/api/orders/user/${user.email}`);
-        // console.log("Orders:", res.data);
         setOrders(res.data);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -41,7 +43,7 @@ function Orders() {
     };
 
     fetchOrders();
-  }, []);
+  }, [user]);
 
   const cancelOrder = async (id) => {
     try {
@@ -85,14 +87,19 @@ function Orders() {
     <>
       <WhatsAppButton />
       <CallButton />
-      <div className="max-w-md mx-auto p-4">
+      <div className="max-w-md mx-auto p-4 pb-28">
         <h1 className="text-2xl font-bold mb-4">Your Orders</h1>
-        {loading ? (
+        {!user ? (
+          <EmptyState
+            title="Please login first 🔐"
+            description="Sign in to view your order history"
+          />
+        ) : loading ? (
           [...Array(3)].map((_, i) => <OrderSkeleton key={i} />)
         ) : orders.length === 0 ? (
           <EmptyState
             title="No orders yet 🧾"
-            description="Start ordering your favorite snacks!"
+            description="You haven't placed any orders yet. Start exploring the menu!"
           />
         ) : (
           orders.map((order) => (
@@ -153,6 +160,7 @@ function Orders() {
             </div>
           ))
         )}
+        {isAdmin && <AdminOrdersButton />}
       </div>
     </>
   );

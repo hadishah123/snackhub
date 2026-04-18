@@ -57,7 +57,7 @@ const updatePrice = async (id, price) => {
 
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto p-4 pb-22">
 
       <h1 className="text-2xl font-bold mb-4">
         Menu Management

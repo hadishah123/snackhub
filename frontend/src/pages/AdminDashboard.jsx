@@ -104,7 +104,7 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto p-4 pb-24">
       <h1 className="text-2xl font-bold mb-4">Orders</h1>
 
       {orders.map((order) => (

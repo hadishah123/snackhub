@@ -4,6 +4,11 @@ export default function OrderProgress({ status }) {
       <div className="mt-3 text-red-500 font-semibold">❌ Order Cancelled</div>
     );
   }
+  if (status === "delivered") {
+    return (
+      <div className="mt-3 text-green-600 font-semibold">📦 Order Delivered</div>
+    );  
+  }
 
   const ORDER_STEPS = [
     "pending",
