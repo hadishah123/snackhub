@@ -20,3 +20,9 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
 }
+
+body {
+  background-color: #0f0f0f;
+  color: #fff;
+  font-family: 'Arial', sans-serif;
+}

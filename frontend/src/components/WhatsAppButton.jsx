@@ -27,7 +27,7 @@ function WhatsAppButton() {
       try {
         const res = await axios.get(`/api/orders/user/${userEmail}`);
         const sorted = res.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         );
         setOrders(sorted);
       } catch (err) {
@@ -45,7 +45,7 @@ function WhatsAppButton() {
         const exists = prev.find((o) => o._id === updatedOrder._id);
         if (exists) {
           return prev.map((o) =>
-            o._id === updatedOrder._id ? updatedOrder : o
+            o._id === updatedOrder._id ? updatedOrder : o,
           );
         } else {
           return [updatedOrder, ...prev];
@@ -60,11 +60,8 @@ function WhatsAppButton() {
   const latestOrder = orders?.[0];
 
   const message =
-    latestOrder &&
-    latestOrder.orderStatus?.toLowerCase() !== "delivered"
-      ? `Hi! I'm checking my order (${latestOrder._id
-          .toUpperCase()
-          .slice(-6)}).
+    latestOrder && latestOrder.orderStatus?.toLowerCase() !== "delivered"
+      ? `Hi! I'm checking my order (${latestOrder._id.toUpperCase().slice(-6)}).
 
 Items: ${latestOrder.items
           .map((item) => `${item.name} x${item.quantity}`)
@@ -83,7 +80,7 @@ Can you help me with this order?`
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
-      className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-5 py-3 rounded-full shadow-lg z-50 transition-all mb-9"
+      className="fixed bottom-6 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-black px-5 py-3 rounded-full shadow-lg z-50 transition-all mb-9"
     >
       <span className="sm:hidden font-semibold">Chat</span>
       <FaWhatsapp className="text-xl" />

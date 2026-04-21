@@ -24,11 +24,13 @@ const cartReducer = (state, action) => {
       );
 
     case "DECREASE_QTY":
-      return state
-        .map((item) =>
-          item._id === action.payload ? { ...item, quantity: item.quantity - 1 } : item
-        )
-        .filter((item) => item.quantity > 0);
+  return state
+    .map((item) =>
+      item._id === action.payload
+        ? { ...item, quantity: Math.max(item.quantity - 1, 0) }
+        : item
+    )
+    .filter((item) => item.quantity > 0);
 
     case "CLEAR_CART":
       return [];
@@ -47,6 +49,7 @@ export function CartProvider({ children }) {
       return localData ? JSON.parse(localData) : [];
     }
   );
+  
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -60,17 +63,24 @@ export function CartProvider({ children }) {
   // Helper functions to match your Cart.jsx requirements
   const removeFromCart = (id) => dispatch({ type: "REMOVE_FROM_CART", payload: id });
   const clearCart = () => dispatch({ type: "CLEAR_CART" });
+const increaseQuantity = (id) =>
+  dispatch({ type: "INCREASE_QTY", payload: id });
+
+const decreaseQuantity = (id) =>
+  dispatch({ type: "DECREASE_QTY", payload: id });
 
   return (
     <CartContext.Provider
-      value={{
-        cartItems: cart, // Renamed to match your component
-        totalAmount,
-        removeFromCart,
-        clearCart,
-        dispatch,
-      }}
-    >
+  value={{
+    cartItems: cart,
+    totalAmount,
+    removeFromCart,
+    clearCart,
+    increaseQuantity,
+    decreaseQuantity,
+    dispatch,
+  }}
+>
       {children}
     </CartContext.Provider>
   );

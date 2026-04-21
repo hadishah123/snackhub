@@ -6,7 +6,7 @@ function CallButton() {
   return (
     <a
       href={`tel:${phoneNumber}`} // Opens dialer on mobile
-      className="fixed bottom-20 mb-8 right-6 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 hover:scale-105 text-white px-4 py-3 rounded-full shadow-lg z-50 transition-all"
+      className="fixed bottom-20 mb-8 right-6 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 hover:scale-105 text-black px-4 py-3 rounded-full shadow-lg z-50 transition-all"
     >
       {/* Mobile text */}
       <span className="sm:hidden font-semibold">Call</span>

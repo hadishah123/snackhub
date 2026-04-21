@@ -18,6 +18,41 @@ function Orders() {
 
   const isAdmin = user?.email === "admin@snackhub.com";
 
+  const formatOrderDate = (date) => {
+  const now = new Date();
+  const orderDate = new Date(date);
+
+  const isToday = orderDate.toDateString() === now.toDateString();
+
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = orderDate.toDateString() === yesterday.toDateString();
+
+  const diffDays = Math.floor(
+    (now - orderDate) / (1000 * 60 * 60 * 24)
+  );
+
+  const time = orderDate.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  if (isToday) return `Today, ${time}`;
+  if (isYesterday) return `Yesterday, ${time}`;
+
+  if (diffDays < 7) {
+    return `${orderDate.toLocaleDateString([], {
+      weekday: "short",
+    })}, ${time}`;
+  }
+
+  return `${orderDate.toLocaleDateString([], {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })}, ${time}`;
+};
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeNow(new Date());
@@ -84,45 +119,76 @@ function Orders() {
   }, []);
 
   return (
-    <>
-      <WhatsAppButton />
-      <CallButton />
-      <div className="max-w-md mx-auto p-4 pb-28">
-        <h1 className="text-2xl font-bold mb-4">Your Orders</h1>
-        {!user ? (
-          <EmptyState
-            title="Please login first 🔐"
-            description="Sign in to view your order history"
-          />
-        ) : loading ? (
-          [...Array(3)].map((_, i) => <OrderSkeleton key={i} />)
-        ) : orders.length === 0 ? (
-          <EmptyState
-            title="No orders yet 🧾"
-            description="You haven't placed any orders yet. Start exploring the menu!"
-          />
-        ) : (
-          orders.map((order) => (
-            <div key={order._id} className="border p-4 rounded-lg mb-4">
-              <p className="font-semibold">
-                Order ID: {order._id.toUpperCase().slice(-6)}
-              </p>
-              <p className="text-sm text-gray-500">
-                {new Date(order.createdAt).toLocaleString()}
-              </p>
+  <>
+    <WhatsAppButton />
+    <CallButton />
 
-              <div className="mt-2">
+    <div className="max-w-md mx-auto px-4 py-6 pb-28 bg-[#0f0f0f] min-h-screen text-white">
+
+      {/* Header */}
+      <h1 className="text-xl font-bold text-yellow-400 mb-5 text-center">
+        Your Orders
+      </h1>
+
+      {!user ? (
+        <EmptyState
+          title="Please login first 🔐"
+          description="Sign in to view your order history"
+        />
+      ) : loading ? (
+        [...Array(3)].map((_, i) => <OrderSkeleton key={i} />)
+      ) : orders.length === 0 ? (
+        <EmptyState
+          title="No orders yet 🧾"
+          description="You haven't placed any orders yet. Start exploring the menu!"
+        />
+      ) : (
+        <div className="space-y-4">
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 shadow-lg"
+            >
+              {/* Top row */}
+              <div className="flex justify-between items-center">
+                <p className="font-semibold text-yellow-400">
+                  #{order._id.toUpperCase().slice(-6)}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {formatOrderDate(order.createdAt)}
+                </p>
+              </div>
+
+              {/* Items */}
+              <div className="mt-3 space-y-1 text-sm text-gray-300">
                 {order.items.map((item, i) => (
                   <p key={i}>
-                    {item.name} x {item.quantity}
+                    {item.name} × {item.quantity}
                   </p>
                 ))}
               </div>
 
-              <p className="mt-2 font-bold">₹{order.totalAmount}</p>
-              <p className="text-sm mt-1">Payment: {order.paymentMethod}</p>
-              <p className="text-sm mt-1">Status: {order.orderStatus}</p>
+              {/* Bottom info */}
+              <div className="mt-4 flex justify-between items-center">
+                <p className="text-lg font-bold text-green-400">
+                  ₹{order.totalAmount}
+                </p>
+
+                <span className="text-xs px-2 py-1 rounded-full bg-gray-800 text-gray-300">
+                  {order.paymentMethod}
+                </span>
+              </div>
+
+              <p className="text-xs mt-2 text-gray-400">
+                Status:{" "}
+                <span className="text-yellow-400 font-medium">
+                  {order.orderStatus}
+                </span>
+              </p>
+
               <OrderProgress status={order.orderStatus} />
+
+              {/* Cancel / Call section */}
               {(() => {
                 const elapsed = timeNow - new Date(order.createdAt);
                 const remaining = 5 * 60 * 1000 - elapsed;
@@ -137,33 +203,37 @@ function Orders() {
                   <>
                     <button
                       onClick={() => cancelOrder(order._id)}
-                      className="mt-2 bg-red-500 hover:bg-red-600 transition text-white px-3 py-1 rounded"
+                      className="mt-3 w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl font-semibold active:scale-95 transition-all"
                     >
                       Cancel Order
                     </button>
 
-                    <p className="text-xs text-red-500 mt-1 flex items-center gap-1 font-semibold animate-pulse">
-                      ⚠️ Act fast! Cancel available for {minutes}:
-                      {String(seconds).padStart(2, "0")}. Call the owner for
-                      faster service.
+                    <p className="text-xs text-red-400 mt-2 text-center animate-pulse">
+                      ⚠️ Cancel in {minutes}:{String(seconds).padStart(2, "0")} —
+                      call for faster help
                     </p>
                   </>
                 ) : (
                   <p
-                    className="text-xs text-gray-500 mt-1 cursor-pointer hover:underline"
-                    onClick={() => (window.location.href = "tel:919545267216")}
+                    className="text-xs text-gray-500 mt-3 text-center hover:text-gray-300 cursor-pointer"
+                    onClick={() =>
+                      (window.location.href = "tel:919545267216")
+                    }
                   >
-                    Call the owner for faster service.
+                    Call the owner for faster service
                   </p>
                 );
               })()}
             </div>
-          ))
-        )}
-        {isAdmin && <AdminOrdersButton />}
-      </div>
-    </>
-  );
+          ))}
+        </div>
+      )}
+
+      {isAdmin && <AdminOrdersButton />}
+    </div>
+  </>
+);
+
 }
 
 export default Orders;

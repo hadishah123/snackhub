@@ -4,15 +4,22 @@ import { CartContext } from "../context/CartContext";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaTrash } from "react-icons/fa";
+import WhatsAppButton from "../components/WhatsAppButton";
 
 function Cart() {
   const [phoneInput, setPhoneInput] = useState("");
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [paymentType, setPaymentType] = useState(null);
   // 🔹 Context
-  const { cartItems, totalAmount, removeFromCart, clearCart } =
-    useContext(CartContext);
+  const {
+    cartItems,
+    totalAmount,
+    removeFromCart,
+    clearCart,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useContext(CartContext);
   const { locationEnabled, location, requestLocation } =
     useContext(LocationContext);
   const { user } = useContext(AuthContext);
@@ -222,201 +229,195 @@ function Cart() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl mt-10">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Your Cart</h2>
-
-        {!cartItems || cartItems.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-gray-500 text-lg">
-              Your cart is empty. Time to buy some snacks! 🍿
-            </p>
-            <button
-              onClick={() => navigate("/menu")}
-              className="mt-4 text-green-600 font-semibold underline"
-            >
-              Go to Menu
-            </button>
+    <>
+      <div className="min-h bg-[#0f0f0f] text-white flex justify-center px-3 py-6">
+        {/* MAIN CARD */}
+        <div className="w-full max-w-md bg-[#1a1a1a] border border-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col">
+          {/* HEADER */}
+          <div className="p-4 border-b border-gray-800">
+            <h2 className="text-lg font-bold text-center text-yellow-400">
+              Your Cart
+            </h2>
           </div>
-        ) : (
-          <>
-            {/* Cart Items */}
-            <div className="space-y-4">
-              {cartItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="flex justify-between items-center border-b pb-4"
-                >
-                  <div>
-                    <h3 className="font-bold text-gray-700">{item.name}</h3>
-                    <p className="text-sm text-gray-500">
-                      ₹{item.price} x {item.quantity}
-                    </p>
+
+          {/* EMPTY STATE */}
+          {!cartItems || cartItems.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-8 text-center">
+              <p className="text-gray-400 text-sm">Your cart is empty 🍿</p>
+
+              <button
+                onClick={() => navigate("/menu")}
+                className="mt-4 bg-green-500 text-black font-bold px-5 py-2 rounded-full active:scale-95"
+              >
+                Browse Menu
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* ITEMS */}
+              <div className="p-4 space-y-3 max-h-[50vh] overflow-y-auto">
+                {cartItems.map((item) => (
+                  <div
+                    key={item._id}
+                    className="flex justify-between items-center bg-[#0f0f0f] border border-gray-800 rounded-xl p-3"
+                  >
+                    {/* LEFT */}
+                    <div className="flex-1 pr-3">
+                      <h3 className="text-sm font-semibold">{item.name}</h3>
+                      <p className="text-xs text-gray-400 mt-1">
+                        ₹{item.price}
+                      </p>
+
+                      {/* QUANTITY CONTROLLER */}
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          onClick={() => decreaseQuantity(item._id)}
+                          className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white rounded-md active:scale-95"
+                        >
+                          -
+                        </button>
+
+                        <span className="text-sm font-semibold min-w-5 text-center">
+                          {item.quantity}
+                        </span>
+
+                        <button
+                          onClick={() => increaseQuantity(item._id)}
+                          className="w-7 h-7 flex items-center justify-center bg-yellow-400 text-black rounded-md active:scale-95"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* RIGHT */}
+                    <div className="text-right">
+                      <p className="text-white font-semibold text-sm">
+                        ₹{item.price * item.quantity}
+                      </p>
+
+                      <button
+                        onClick={() => removeFromCart(item._id)}
+                        className="mt-2 p-2 rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 active:scale-95 transition"
+                      >
+                        <FaTrash className="text-sm" />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-6">
-                    <p className="font-bold text-lg">
-                      ₹{item.price * item.quantity}
-                    </p>
-                    <button
-                      onClick={() => removeFromCart(item._id)}
-                      className="bg-red-50 text-red-500 px-3 py-1 rounded-md hover:bg-red-500 hover:text-white transition-all text-sm"
-                    >
-                      Remove
-                    </button>
-                  </div>
+                ))}
+              </div>
+
+              {/* FOOTER / CHECKOUT */}
+              <div className="border-t border-gray-800 p-4 bg-[#111]">
+                {/* TOTAL */}
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-gray-400 text-sm">Total</span>
+                  <span className="text-2xl font-black text-green-400 drop-shadow-[0_0_6px_rgba(34,197,94,0.4)]">
+                    ₹{totalAmount}
+                  </span>
                 </div>
-              ))}
-            </div>
 
-            {/* Total Section */}
-            <div className="mt-8 pt-6 border-t border-gray-200">
-              <div className="flex justify-between items-center">
-                <span className="text-xl font-medium text-gray-600">
-                  Total Amount:
-                </span>
-                <span className="text-3xl font-black text-green-600">
-                  ₹{totalAmount}
-                </span>
+                {/* DISTANCE WARN */}
+                {distance && (
+                  <p className="text-xs text-gray-400 mb-2">
+                    📍 {distance.toFixed(2)} km away
+                  </p>
+                )}
+
+                {distance !== null && distance > 15 && (
+                  <p className="text-xs text-red-400 mb-2">
+                    🚫 Outside delivery range
+                  </p>
+                )}
+
+                {/* BUTTONS */}
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      setPaymentType("COD");
+                      setShowPhoneModal(true);
+                    }}
+                    className="w-full py-3 rounded-xl font-bold bg-green-500 text-black active:scale-95"
+                  >
+                    Cash on Delivery
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setPaymentType("RAZORPAY");
+                      setShowPhoneModal(true);
+                    }}
+                    className="w-full py-3 rounded-xl font-bold bg-yellow-400 text-black active:scale-95"
+                  >
+                    Pay Online
+                  </button>
+                </div>
               </div>
+            </>
+          )}
+        </div>
 
-              {distance && (
-                <p className="text-sm text-gray-500 mt-2">
-                  📍 Delivery distance:{" "}
-                  <strong>{distance.toFixed(2)} km</strong>
-                </p>
-              )}
+        {/* WHATSAPP FLOAT */}
+        {cartItems && cartItems.length > 0 && (
+          <button
+            onClick={handleWhatsAppOrder}
+            className="fixed bottom-16 right-4 bg-[#25D366] text-black px-4 py-3 rounded-full shadow-lg flex items-center gap-2 active:scale-95"
+          >
+            <FaWhatsapp />
+            <span className="text-sm font-semibold">WhatsApp</span>
+          </button>
+        )}
 
-              {distance !== null && distance > 15 && (
-                <p className="text-red-500 text-sm mt-2">
-                  🚫 Delivery only within 15 km
-                </p>
-              )}
+        {/* PHONE MODAL */}
+        {showPhoneModal && (
+          <div className="fixed inset-0 bg-black/70 flex items-end justify-center z-50">
+            <div className="bg-[#1a1a1a] w-full max-w-md p-5 rounded-t-2xl border border-gray-800">
+              <h2 className="text-lg font-bold mb-3 text-yellow-400">
+                Enter Phone Number
+              </h2>
 
-              <div className="flex flex-col gap-3 mt-6">
-                <p className="text-sm text-gray-500 mt-4">
-                  Choose payment method
-                </p>
+              <input
+                type="tel"
+                placeholder="10-digit number"
+                value={phoneInput}
+                onChange={(e) =>
+                  setPhoneInput(e.target.value.replace(/\D/g, ""))
+                }
+                maxLength={10}
+                className="w-full bg-[#0f0f0f] border border-gray-700 text-white p-3 rounded mb-3"
+              />
 
-                {/* Reusable disabled logic */}
-                {(() => {
-                  const isCODDisabled =
-                    !cartItems.length ||
-                    !locationEnabled ||
-                    (distance !== null && distance > 15);
-                  const codDisabledText = !locationEnabled
-                    ? "Enable location for COD"
-                    : distance !== null && distance > 15
-                      ? "Out of delivery range"
-                      : "";
+              <button
+                onClick={async () => {
+                  if (phoneInput.length !== 10) {
+                    alert("Enter valid phone number");
+                    return;
+                  }
 
-                  return (
-                    <>
-                      {/* COD Button */}
-                      <button
-                        onClick={() => {
-                          setPaymentType("COD");
-                          setShowPhoneModal(true);
-                        }}
-                        disabled={isCODDisabled}
-                        className={`w-full py-4 rounded-xl text-lg font-bold ${
-                          isCODDisabled
-                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-green-600 hover:bg-green-700 text-white"
-                        }`}
-                      >
-                        {codDisabledText || "Cash on Delivery"}
-                      </button>
+                  setShowPhoneModal(false);
 
-                      {/* Razorpay Button */}
-                      <button
-                        onClick={() => {
-                          setPaymentType("RAZORPAY");
-                          setShowPhoneModal(true);
-                        }}
-                        disabled={
-                          !cartItems.length ||
-                          (distance !== null && distance > 15)
-                        }
-                        className={`w-full py-4 rounded-xl text-lg font-bold ${
-                          !cartItems.length ||
-                          (distance !== null && distance > 15)
-                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-black hover:bg-gray-900 text-white"
-                        }`}
-                      >
-                        {distance !== null && distance > 15
-                          ? "Out of delivery range"
-                          : "Pay Online"}
-                      </button>
-                    </>
-                  );
-                })()}
-              </div>
+                  if (paymentType === "COD") {
+                    handleCODClick(phoneInput);
+                  } else {
+                    handleRazorpayPayment(phoneInput);
+                  }
+                }}
+                className="w-full bg-green-500 text-black py-3 rounded-lg font-bold"
+              >
+                Continue
+              </button>
+
+              <button
+                onClick={() => setShowPhoneModal(false)}
+                className="w-full mt-2 text-gray-400"
+              >
+                Cancel
+              </button>
             </div>
-          </>
+          </div>
         )}
       </div>
-
-      {/* ✅ WhatsApp Floating Button - Outside Main Container */}
-      {cartItems && cartItems.length > 0 && (
-        <button
-          onClick={handleWhatsAppOrder}
-          className="fixed bottom-6 mb-9 right-6 flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] text-white px-4 py-3 rounded-full shadow-lg z-50 transition-all"
-        >
-          {/* Mobile text */}
-          <span className="sm:hidden font-semibold">Order on</span>
-
-          {/* Icon */}
-          <FaWhatsapp className="text-xl" />
-
-          {/* Desktop text */}
-          <span className="hidden sm:inline font-semibold">WhatsApp</span>
-        </button>
-      )}
-      {showPhoneModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-end justify-center z-50">
-          <div className="bg-white w-full max-w-md p-5 rounded-t-2xl">
-            <h2 className="text-lg font-bold mb-3">Enter Phone Number</h2>
-
-            <input
-              type="tel"
-              placeholder="10-digit phone number"
-              value={phoneInput}
-              onChange={(e) => setPhoneInput(e.target.value.replace(/\D/g, ""))}
-              maxLength={10}
-              className="w-full border p-3 rounded mb-3"
-            />
-
-            <button
-              onClick={async () => {
-                if (phoneInput.length !== 10) {
-                  alert("Enter valid phone number");
-                  return;
-                }
-
-                setShowPhoneModal(false);
-
-                if (paymentType === "COD") {
-                  handleCODClick(phoneInput);
-                } else {
-                  handleRazorpayPayment(phoneInput);
-                }
-              }}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-bold"
-            >
-              Continue
-            </button>
-
-            <button
-              onClick={() => setShowPhoneModal(false)}
-              className="w-full mt-2 text-gray-500"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
