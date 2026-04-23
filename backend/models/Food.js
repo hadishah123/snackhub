@@ -10,6 +10,11 @@ const foodSchema = new mongoose.Schema({
   isAvailable: {
     type: Boolean,
     default: true
+  },
+
+  isTrending: {
+    type: Boolean,
+    default: false
   }
 
 }, { timestamps: true });

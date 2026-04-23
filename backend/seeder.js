@@ -10,7 +10,7 @@ connectDB();
 const seed = async () => {
   try {
 
-    await Food.deleteMany();
+    await Food.deleteMany(); // ✅ IMPORTANT: clear old data first
 
     const foods = menu.map(item => ({
       name: item.name,
@@ -18,7 +18,8 @@ const seed = async () => {
       price: item.price,
       category: item.category,
       image: item.image,
-      isAvailable: item.available
+      isAvailable: item.available,
+      isTrending: item.isTrending || false,
     }));
 
     await Food.insertMany(foods);
@@ -28,10 +29,8 @@ const seed = async () => {
     process.exit();
 
   } catch (error) {
-
     console.error(error);
     process.exit(1);
-
   }
 };
 
