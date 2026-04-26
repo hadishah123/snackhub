@@ -1,7 +1,7 @@
 import { FaPhone } from "react-icons/fa";
 
 function CallButton() {
-  const phoneNumber = "919545267216"; // Owner's number
+  const phoneNumber = "918999212149"; // Owner's number
 
   return (
     <a

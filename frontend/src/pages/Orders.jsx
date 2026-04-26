@@ -217,7 +217,7 @@ function Orders() {
                   <p
                     className="text-xs text-gray-500 mt-3 text-center hover:text-gray-300 cursor-pointer"
                     onClick={() =>
-                      (window.location.href = "tel:919545267216")
+                      (window.location.href = "tel:918999212149")
                     }
                   >
                     Call the owner for faster service

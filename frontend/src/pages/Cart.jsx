@@ -158,7 +158,7 @@ function Cart() {
         : "Not shared"
     }`;
     const encoded = encodeURIComponent(message);
-    const phone = "919545267216";
+    const phone = "918999212149";
     window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank");
   };
 
@@ -232,7 +232,7 @@ function Cart() {
     <>
       <div className="min-h bg-[#0f0f0f] text-white flex justify-center px-3 py-6">
         {/* MAIN CARD */}
-        <div className="w-full max-w-md bg-[#1a1a1a] border border-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col">
+        <div className="w-full max-w-md bg-[#1a1a1a] border border-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col mb-10">
           {/* HEADER */}
           <div className="p-4 border-b border-gray-800">
             <h2 className="text-lg font-bold text-center text-yellow-400">
@@ -310,7 +310,7 @@ function Cart() {
               {/* FOOTER / CHECKOUT */}
               <div className="border-t border-gray-800 p-4 bg-[#111]">
                 {/* TOTAL */}
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex justify-between items-center ">
                   <span className="text-gray-400 text-sm">Total</span>
                   <span className="text-2xl font-black text-green-400 drop-shadow-[0_0_6px_rgba(34,197,94,0.4)]">
                     ₹{totalAmount}
