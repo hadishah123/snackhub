@@ -216,7 +216,7 @@ function Cart() {
         },
 
         theme: {
-          color: "#16a34a", // green theme
+          color: "#16a34a",
         },
       };
 
@@ -331,7 +331,7 @@ function Cart() {
                 )}
 
                 {/* BUTTONS */}
-                <div className="space-y-2">
+                <div className="space-y-2 mb-5">
                   <button
                     onClick={() => {
                       setPaymentType("COD");
@@ -363,8 +363,8 @@ function Cart() {
             onClick={handleWhatsAppOrder}
             className="fixed bottom-16 right-4 bg-[#25D366] text-black px-4 py-3 rounded-full shadow-lg flex items-center gap-2 active:scale-95"
           >
+            <span className="text-sm font-semibold">Order on</span>
             <FaWhatsapp />
-            <span className="text-sm font-semibold">WhatsApp</span>
           </button>
         )}
 
