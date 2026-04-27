@@ -9,6 +9,7 @@ import {
   signInWithPhoneNumber,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { FaGoogle, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 
 function Login() {
   const { user, loading: authLoading } = useContext(AuthContext);
@@ -16,10 +17,9 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState(""); 
+  const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [confirmationResult, setConfirmationResult] = useState(null);
 
@@ -34,11 +34,9 @@ function Login() {
       })
     );
 
-    if (user.email === "admin@snackhub.com") {
-      navigate("/admin", { replace: true });
-    } else {
-      navigate("/", { replace: true });
-    }
+    navigate(user.email === "admin@snackhub.com" ? "/admin" : "/", {
+      replace: true,
+    });
   }, [user, navigate]);
 
   const handleGoogleLogin = async () => {
@@ -47,8 +45,7 @@ function Login() {
       setError("");
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
-    } catch (err) {
-      console.error("Google Error:", err);
+    } catch {
       setError("Google sign-in failed. Please try again.");
       setLoading(false);
     }
@@ -60,8 +57,7 @@ function Login() {
       setLoading(true);
       setError("");
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
-      console.error("Email Login Error:", err);
+    } catch {
       setError("Invalid email or password.");
       setLoading(false);
     }
@@ -69,10 +65,13 @@ function Login() {
 
   const setupRecaptcha = () => {
     if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-        size: "normal",
-        callback: () => console.log("reCAPTCHA solved"),
-      });
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        "recaptcha-container",
+        {
+          size: "normal",
+        }
+      );
     }
   };
 
@@ -81,15 +80,18 @@ function Login() {
       setError("Please enter a valid 10-digit number.");
       return;
     }
+
     try {
       setLoading(true);
       setError("");
       setupRecaptcha();
-      const phoneNumber = `+91${phone}`;
-      const appVerifier = window.recaptchaVerifier;
-      const result = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
+      const result = await signInWithPhoneNumber(
+        auth,
+        `+91${phone}`,
+        window.recaptchaVerifier
+      );
       setConfirmationResult(result);
-      alert("OTP sent to +91 " + phone);
+      alert(`OTP sent to +91 ${phone}`);
     } catch (err) {
       setError("SMS Error: " + err.message);
       if (window.recaptchaVerifier) {
@@ -106,117 +108,141 @@ function Login() {
       setLoading(true);
       setError("");
       await confirmationResult.confirm(otp);
-    } catch (err) {
-      console.error("OTP Verification Error:", err);
+    } catch {
       setError("Invalid OTP. Try again.");
       setLoading(false);
     }
   };
 
-  if (authLoading && !error) {
-    return <div className="text-center mt-24">Syncing SnackHub Profile...</div>;
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#0B0B0B] flex items-center justify-center text-gray-300">
+        Syncing SnackHub Profile...
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-md mx-auto mt-12 p-8 border border-gray-300 rounded-xl font-sans shadow-lg" onLoad={handleGoogleLogin}>
-      <h2 className="text-center mb-5 text-2xl font-semibold">Login to SnackHub</h2>
-
-      {error && (
-        <div className="bg-red-100 text-red-700 p-2 rounded mb-5 text-center border border-red-200 text-sm">
-          {error}
+    <div className="min-h-screen bg-[#0B0B0B] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md bg-[#121212] border border-gray-800 rounded-3xl shadow-2xl p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-extrabold text-yellow-400 mb-2">
+            SnackHub
+          </h1>
+          <p className="text-gray-400">Login to continue your foodie journey</p>
         </div>
-      )}
 
-      <button
-        onClick={handleGoogleLogin}
-        disabled={loading}
-        className="w-full flex items-center justify-center p-3 mb-5 bg-white border border-gray-300 rounded font-bold cursor-pointer hover:bg-gray-50"
-      >
-        <img
-          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-          alt=""
-          className="w-4 mr-2"
-        />
-        {loading ? "Verifying..." : "Continue with Google"}
-      </button>
-
-      <div className="text-center border-b border-gray-200 my-8 relative">
-        <span className="bg-white px-3 text-gray-500 absolute left-1/2 -translate-x-1/2 -top-3">OR</span>
-      </div>
-
-      <form onSubmit={handleEmailLogin} className="flex flex-col gap-3 mb-8">
-        <input
-          type="email"
-          placeholder="Email Address"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="p-3 bg-gray-800 text-white rounded hover:bg-gray-900 transition"
-        >
-          {loading ? "Logging in..." : "Login with Email"}
-        </button>
-      </form>
-
-      <div className="text-center border-b border-gray-200 my-8 relative">
-        <span className="bg-white px-3 text-gray-500 absolute left-1/2 -translate-x-1/2 -top-3">OR</span>
-      </div>
-
-      <div className="flex flex-col gap-3 mb-4">
-        {!confirmationResult ? (
-          <>
-            <div className="flex border border-gray-300 rounded overflow-hidden">
-              <span className="p-3 bg-gray-100 border-r border-gray-300 text-gray-600">+91</span>
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                maxLength="10"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                className="flex-1 p-3 outline-none"
-              />
-            </div>
-            <button
-              onClick={handleSendOTP}
-              disabled={loading || phone.length < 10}
-              className="p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-            >
-              Send OTP
-            </button>
-          </>
-        ) : (
-          <>
-            <input
-              type="text"
-              placeholder="6-digit OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              className="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-gray-400"
-            />
-            <button
-              onClick={handleVerifyOTP}
-              disabled={loading}
-              className="p-3 bg-green-600 text-white rounded hover:bg-green-700 transition"
-            >
-              Verify OTP
-            </button>
-          </>
+        {error && (
+          <div className="mb-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+            {error}
+          </div>
         )}
-      </div>
 
-      <div id="recaptcha-container" className="mt-4"></div>
+        <button
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-3 rounded-2xl bg-white text-black font-semibold py-3 hover:scale-[1.02] transition"
+        >
+          <FaGoogle />
+          {loading ? "Verifying..." : "Continue with Google"}
+        </button>
+
+        <div className="relative my-8">
+          <div className="border-t border-gray-800" />
+          <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-[#121212] px-4 text-sm text-gray-500">
+            OR
+          </span>
+        </div>
+
+        <form onSubmit={handleEmailLogin} className="space-y-4 mb-8">
+          <div className="relative">
+            <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+            <input
+              type="email"
+              placeholder="Email Address"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-[#1A1A1A] border border-gray-700 rounded-2xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-yellow-400"
+            />
+          </div>
+
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full bg-[#1A1A1A] border border-gray-700 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-yellow-400"
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-2xl bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition"
+          >
+            {loading ? "Logging in..." : "Login with Email"}
+          </button>
+        </form>
+
+        <div className="relative mb-8">
+          <div className="border-t border-gray-800" />
+          <span className="absolute left-1/2 -translate-x-1/2 -top-3 bg-[#121212] px-4 text-sm text-gray-500">
+            OR
+          </span>
+        </div>
+
+        <div className="space-y-4">
+          {!confirmationResult ? (
+            <>
+              <div className="flex items-center bg-[#1A1A1A] border border-gray-700 rounded-2xl overflow-hidden">
+                <span className="px-4 py-3 text-gray-400 border-r border-gray-700">
+                  +91
+                </span>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  maxLength="10"
+                  value={phone}
+                  onChange={(e) =>
+                    setPhone(e.target.value.replace(/\D/g, ""))
+                  }
+                  className="flex-1 bg-transparent px-4 py-3 text-white outline-none"
+                />
+              </div>
+
+              <button
+                onClick={handleSendOTP}
+                disabled={loading || phone.length < 10}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-gray-800 text-white hover:bg-gray-700 transition"
+              >
+                <FaPhoneAlt />
+                Send OTP
+              </button>
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                placeholder="Enter 6-digit OTP"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="w-full bg-[#1A1A1A] border border-gray-700 rounded-2xl py-3 px-4 text-white focus:outline-none focus:border-yellow-400"
+              />
+
+              <button
+                onClick={handleVerifyOTP}
+                disabled={loading}
+                className="w-full py-3 rounded-2xl bg-yellow-400 text-black font-bold hover:bg-yellow-300 transition"
+              >
+                Verify OTP
+              </button>
+            </>
+          )}
+        </div>
+
+        <div id="recaptcha-container" className="mt-6" />
+      </div>
     </div>
   );
 }
