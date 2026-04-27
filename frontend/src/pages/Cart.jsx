@@ -247,7 +247,7 @@ function Cart() {
 
               <button
                 onClick={() => navigate("/menu")}
-                className="mt-4 bg-green-500 text-black font-bold px-5 py-2 rounded-full active:scale-95"
+                className="mt-4 bg-yellow-400 text-black font-bold px-5 py-2 rounded-full active:scale-95"
               >
                 Browse Menu
               </button>

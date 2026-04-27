@@ -63,12 +63,6 @@ if (selectedCategory !== "All") {
   );
 }
 
-// 2. SORT / TRENDING LOGIC
-// if (sort === "trending") {
-//   filteredMenu = filteredMenu.filter(
-//     (item) => item.isTrending === true || item.isTrending === "true"
-//   );
-// }
 if (sort === "trending") {
   filteredMenu = filteredMenu.filter(
     (item) => Boolean(item.isTrending) === true

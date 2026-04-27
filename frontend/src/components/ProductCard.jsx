@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { LocationContext } from "../context/LocationContext";
 import ProductModal from "./ProductModal";
+import { motion, AnimatePresence  } from "framer-motion";
+
 
 function ProductCard({ product }) {
   const { cartItems, dispatch } = useContext(CartContext);
@@ -36,7 +38,13 @@ function ProductCard({ product }) {
   return (
     <>
       {/* CARD */}
-      <div
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.35 }}
         className="flex justify-between gap-4 py-4 border-b border-gray-800 last:border-none cursor-pointer"
         onClick={() => setShowModal(true)}
       >
@@ -81,9 +89,11 @@ function ProductCard({ product }) {
 
         {/* RIGHT IMAGE */}
         <div className="relative w-28 h-28 shrink-0">
-          <img
+          <motion.img
             src={product.image || "/placeholder.png"}
             alt={product.name}
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
             className="w-full h-full object-cover rounded-2xl border border-gray-800"
           />
 
@@ -97,17 +107,25 @@ function ProductCard({ product }) {
               UNAVAILABLE
             </button>
           ) : quantity === 0 ? (
-            <button
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddClick();
               }}
-              className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black font-bold text-xs px-4 py-1.5 rounded-full active:scale-95"
+              className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-yellow-400 text-black font-bold text-xs px-4 py-1.5 rounded-full"
             >
               ADD
-            </button>
+            </motion.button>
           ) : (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center bg-black/80 border border-gray-700 rounded-full overflow-hidden">
+            <motion.div
+              key="counter"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center bg-black/80 border border-gray-700 rounded-full overflow-hidden"
+            >
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -129,16 +147,13 @@ function ProductCard({ product }) {
               >
                 +
               </button>
-            </div>
+            </motion.div>
           )}
         </div>
-      </div>
-      
+      </motion.div>
+
       {showModal && (
-        <ProductModal
-          product={product}
-          onClose={() => setShowModal(false)}
-        />
+        <ProductModal product={product} onClose={() => setShowModal(false)} />
       )}
     </>
   );
