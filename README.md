@@ -1,3 +1,6 @@
+
+
+
 # 🍟 SnackHub — Production-Ready MERN Food Delivery Platform
 
 > 🚀 A full-stack, real-world food delivery platform built with the MERN stack, featuring hybrid authentication, secure online payments, role-based access control, and real-time order lifecycle management.
@@ -27,11 +30,9 @@ Whether you're exploring full-stack architecture, authentication strategies, or 
 
 ---
 
-## 🎥 Application Preview
+## 🎬 Demo Video
 
-<p align="center">
-  <img src="./frontend/public/snackhub-preview.png" width="95%" alt="SnackHub Preview" />
-</p>
+https://github.com/user-attachments/assets/8c7b92f3-1d67-42df-b689-dc4a0b41d329
 
 ---
 
