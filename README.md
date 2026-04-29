@@ -63,7 +63,7 @@ Whether you're exploring full-stack architecture, authentication strategies, or 
 ### 👤 Customer Interface
 
 <p align="center">
-  <img src="./frontend/public/customer-view/Home.webp" width="23%" />
+  <img src="./frontend/public/customer-view/home.webp" width="23%" />
   <img src="./frontend/public/customer-view/menu.webp" width="23%" />
   <img src="./frontend/public/customer-view/cart.webp" width="23%" />
   <img src="./frontend/public/customer-view/orders.webp" width="23%" />
