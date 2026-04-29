@@ -1,206 +1,279 @@
-# 🍟 SnackHub — MERN Food Delivery App with Firebase Auth
+# 🍟 SnackHub — Production-Ready MERN Food Delivery Platform
 
-> 🚀 Production-ready full-stack food delivery system with Hybrid Authentication (Google, Email, OTP) and real-time MongoDB sync.  
-> 🧠 Built using real-world architecture patterns including authentication separation, role-based access control, and scalable backend design.  
-> ⚙️ Demonstrates end-to-end production-grade system design inspired by platforms like Swiggy/Zomato.
+> 🚀 A full-stack, real-world food delivery platform built with the MERN stack, featuring hybrid authentication, secure online payments, role-based access control, and real-time order lifecycle management.
+>
+> Designed with production-grade architecture inspired by platforms like Swiggy and Zomato.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Stack-MERN-green"/>
-  <img src="https://img.shields.io/badge/Auth-Firebase-orange"/>
-  <img src="https://img.shields.io/badge/Status-Live-brightgreen"/>
+  <img src="https://img.shields.io/badge/Stack-MERN-16a34a?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Auth-Firebase-ff8c00?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Payments-Razorpay-0f62fe?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Status-Live-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" />
 </p>
 
 <p align="center">
-  <a href="https://snackhub-nagpur.vercel.app"><b>🔥 Live Demo</b></a> •
-  <a href="https://snackhub-backend.onrender.com"><b>⚙️ API</b></a>
-</p>
-
-## 🎥 Demo
-
-<p align="center">
-  <img src="./frontend/public/snackhub-preview.png" width="90%" />
+  <a href="https://snackhub-nagpur.vercel.app"><img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_App-brightgreen?style=for-the-badge" /></a>
+  <a href="https://snackhub-backend.onrender.com"><img src="https://img.shields.io/badge/⚙️_API-Live_Endpoint-blue?style=for-the-badge" /></a>
 </p>
 
 ---
 
-## 💥 Why SnackHub?
+## ✨ Overview
 
-Unlike typical tutorial-based food delivery clones:
+SnackHub is a modern, scalable food ordering platform that simulates how real-world delivery systems operate. It goes far beyond a standard CRUD project by integrating authentication, payments, real-time updates, and role-based workflows into one cohesive production-ready application.
 
-- 🔐 Secure authentication with Firebase + JWT separation
-- ⚡ Real-time user sync between Firebase and MongoDB
-- 🧠 Scalable role-based system (Admin / Customer)
-- 🚀 Production-style backend architecture with REST APIs
+Whether you're exploring full-stack architecture, authentication strategies, or scalable MERN development, SnackHub demonstrates practical engineering patterns used in modern web applications.
 
 ---
 
-## ⚡ Try It Instantly
+## 🎥 Application Preview
+
+<p align="center">
+  <img src="./frontend/public/snackhub-preview.png" width="95%" alt="SnackHub Preview" />
+</p>
+
+---
+
+## 🌟 Why SnackHub Stands Out
+
+* 🔐 **Hybrid Authentication System** — Google, Email/Password, and Phone OTP via Firebase
+* 🛡️ **Secure Authorization Layer** — Firebase authentication combined with JWT-protected APIs
+* 🔄 **Real-Time User Synchronization** — Seamless Firebase-to-MongoDB user sync
+* 👥 **Role-Based Access Control** — Separate experiences for Admins and Customers
+* 💳 **Production Payment Flow** — Razorpay integration with server-side verification
+* 📦 **Real-Time Order Management** — Live order lifecycle tracking
+* 🏗️ **Scalable Backend Architecture** — Modular REST API design
+* 📱 **Responsive UI/UX** — Optimized for mobile, tablet, and desktop
+
+---
+
+## 🚀 Live Demo
 
 <p align="center">
   <a href="https://snackhub-nagpur.vercel.app">
-    <img src="https://img.shields.io/badge/Open%20Live%20App-Click%20Here-brightgreen?style=for-the-badge"/>
+    <img src="https://img.shields.io/badge/Try_SnackHub_Now-Open_Live_App-success?style=for-the-badge" />
   </a>
 </p>
 
 ---
 
-## 📱 App Preview
+## 📱 User Experience
 
-### 👤 Customer Experience
+### 👤 Customer Interface
 
 <p align="center">
-  <a href="./frontend/public/customer-view/nav.webp">
-    <img src="./frontend/public/customer-view/nav.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
-  <a href="./frontend/public/customer-view/menu.webp">
-    <img src="./frontend/public/customer-view/menu.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
-  <a href="./frontend/public/customer-view/cart.webp">
-    <img src="./frontend/public/customer-view/cart.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
-  <a href="./frontend/public/customer-view/orders.webp">
-    <img src="./frontend/public/customer-view/orders.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
+  <img src="./frontend/public/customer-view/Home.webp" width="23%" />
+  <img src="./frontend/public/customer-view/menu.webp" width="23%" />
+  <img src="./frontend/public/customer-view/cart.webp" width="23%" />
+  <img src="./frontend/public/customer-view/orders.webp" width="23%" />
 </p>
 
-<p align="center"><sub>🔍 Click images to view full size</sub></p>
+<p align="center"><sub>Browse menu, manage cart, place orders, and track deliveries in real time.</sub></p>
 
 ---
 
-### 🛠️ Admin Panel
+### 🛠️ Admin Dashboard
 
 <p align="center">
-  <a href="./frontend/public/admin-view/orders.webp">
-    <img src="./frontend/public/admin-view/orders.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
-  <a href="./frontend/public/admin-view/admin-orders.webp">
-    <img src="./frontend/public/admin-view/admin-orders.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
-  <a href="./frontend/public/admin-view/menu.webp">
-    <img src="./frontend/public/admin-view/menu.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
-  <a href="./frontend/public/admin-view/manage-menu.webp">
-    <img src="./frontend/public/admin-view/manage-menu.webp" width="23%" style="margin:6px; border-radius:10px;" />
-  </a>
+  <img src="./frontend/public/admin-view/dashboard.webp" width="23%" />
+  <img src="./frontend/public/admin-view/admin_orders.webp" width="23%" />
+  <img src="./frontend/public/admin-view/admin_menu.webp" width="23%" />
+  <img src="./frontend/public/admin-view/manage_menu.webp" width="23%" />
 </p>
 
-<p align="center"><sub>🔍 Click images to view full size</sub></p>
+<p align="center"><sub>Manage orders, update statuses, and control menu inventory with ease.</sub></p>
 
 ---
 
-## 🧠 Architecture
+## 🧠 System Architecture
 
-```
-Frontend (React + Vite)
+```text
+React (Vite Frontend)
         ↓
-Firebase Auth (Google / Email / OTP)
+Firebase Authentication
+(Google • Email • Phone OTP)
         ↓
-JWT Verification (Express Middleware)
+JWT Authorization Layer
         ↓
-Node.js + Express API
+Express.js REST API
         ↓
-MongoDB (Users • Orders • Menu)
+MongoDB Atlas Database
+(Users • Menu • Orders)
         ↓
-Razorpay (Payments)
+Razorpay Payment Gateway
         ↓
-Real-time Order Updates
+Real-Time Order Updates
 ```
 
-### 💡 Architecture Principle
-> Separation of concerns: Authentication (Firebase), Business Logic (Express), and Payments (Razorpay) are fully decoupled for scalability, security, and real-world production behavior.
+### 🏗️ Architectural Principles
+
+* **Separation of Concerns** — Authentication, business logic, and payments are independently managed
+* **Scalability** — Modular backend design enables easy feature expansion
+* **Security First** — Token verification, protected routes, and payment validation
+* **Maintainability** — Clean code structure and reusable components
 
 ---
 
-## 🚀 Production-Grade Integrations
+## 💳 Payment Workflow
 
-SnackHub goes beyond a typical CRUD project by integrating real production services:
+* Secure checkout powered by Razorpay
+* Server-side payment signature verification
+* Protection against fake or unpaid orders
+* Handles success, failure, and pending states gracefully
+* Order creation only after successful payment validation
 
-### 💳 Razorpay Payment Flow
-- Secure checkout using Razorpay gateway
-- Payment verification before order confirmation
-- Handles success, failure, and pending states
-- Prevents fake or unpaid orders
+---
 
-### 📍 Live Order Tracking System
-- Real-time order status updates:
-  - 🕐 Placed
-  - 👨‍🍳 Preparing
-  - 🚚 Out for Delivery
-  - ✅ Delivered
-- Instant UI updates without refresh
-- Admin-controlled order lifecycle management
+## 📍 Real-Time Order Tracking
 
-> ⚡ This makes SnackHub behave like a real Swiggy/Zomato-style system, not just a demo app.
+Customers can track their orders through every stage:
+
+* 🕐 Order Placed
+* 👨‍🍳 Preparing
+* 🚚 Out for Delivery
+* ✅ Delivered
+
+Admins can update order statuses instantly, and customers see changes in real time without refreshing the page.
+
+---
 
 ## 🏗️ Tech Stack
 
-### 🎨 Frontend
-- ⚛️ React (Vite) — Fast SPA development & optimized builds  
-- 🔥 Firebase SDK — Authentication (Google, Email, OTP)  
-- 🌐 React Router — Client-side routing  
-- 🧠 Context API — Global state management  
-- ⚡ Axios — API communication layer  
-- 🎨 Tailwind CSS / Material UI — Responsive UI components  
+### Frontend
 
----
+* ⚛️ React.js (Vite)
+* 🎨 Tailwind CSS / Framer Motion
+* 🌐 React Router DOM
+* 🧠 Context API
+* 🔥 Firebase SDK
+* ⚡ Axios
 
-### 🚀 Backend
-- 🟢 Node.js — Runtime environment  
-- 🚂 Express.js — REST API framework  
-- 🗄️ MongoDB (Mongoose) — NoSQL database modeling  
-- 🔐 Firebase Admin SDK — Secure token verification  
-- 🪪 JWT — Authentication & session management  
+### Backend
 
----
+* 🟢 Node.js
+* 🚂 Express.js
+* 🗄️ MongoDB Atlas + Mongoose
+* 🔐 Firebase Admin SDK
+* 🪪 JWT Authentication
 
-## 🚀 Deployment Architecture
+### Third-Party Services
 
-- 🎨 Frontend: Vercel (React + Vite build)
-- ⚙️ Backend: Render (Node.js + Express API)
-- 🗄️ Database: MongoDB Atlas (Cloud NoSQL database)
+* 🔥 Firebase Authentication
+* 💳 Razorpay Payment Gateway
+* ☁️ MongoDB Atlas
+* ▲ Vercel Deployment
+* 🚀 Render Backend Hosting
 
 ---
 
 ## 🔥 Core Features
 
-- 🔐 Hybrid Authentication (Google, Email, Phone OTP)
-- 🛒 Full Cart & Checkout System
-- 💳 Razorpay Payment Gateway Integration
-- 📍 Live Order Tracking System (Real-time status updates)
-- 🧠 Role-Based Access Control (Admin / Customer)
-- 📦 Secure REST API with JWT authentication
-- 🔄 Firebase → MongoDB real-time user sync
-- 📱 Fully responsive UI (Mobile + Desktop)
+* Hybrid Authentication (Google, Email, Phone OTP)
+* Secure JWT-Based API Authorization
+* Role-Based Access Control (Admin / Customer)
+* Dynamic Menu Management
+* Cart and Checkout Workflow
+* Razorpay Payment Integration
+* Real-Time Order Tracking
+* Admin Order Management Dashboard
+* Firebase to MongoDB User Synchronization
+* Fully Responsive Cross-Device Interface
 
 ---
 
-## ⚡ Run Locally
+## 🚀 Deployment Architecture
+
+| Layer          | Platform      |
+| -------------- | ------------- |
+| Frontend       | Vercel        |
+| Backend        | Render        |
+| Database       | MongoDB Atlas |
+| Authentication | Firebase      |
+| Payments       | Razorpay      |
+
+---
+
+## ⚙️ Local Development Setup
 
 ```bash
 git clone https://github.com/hadishah123/snackhub.git
+cd snackhub
+```
 
-cd ./frontend && npm install
-cd ./backend && npm install
+### Install Dependencies
 
-npm run server
+```bash
+# Frontend
+cd frontend
+npm install
+
+# Backend
+cd ../backend
+npm install
+```
+
+### Configure Environment Variables
+
+Create `.env` files for both frontend and backend with:
+
+* Firebase configuration
+* MongoDB connection URI
+* JWT secret
+* Razorpay credentials
+
+### Start Development Servers
+
+```bash
+# Backend
+cd ../backend
+npm start
+
+# Frontend (in a separate terminal)
+cd ../frontend
 npm run dev
 ```
 
-> ⚠️ Requires Firebase + MongoDB `.env` setup
+---
+
+## 📂 Project Highlights
+
+* Clean folder structure
+* Reusable component architecture
+* Protected route implementation
+* Scalable API design
+* Production deployment workflow
+* Industry-standard authentication flow
 
 ---
 
-## 🙌 Final Note
+## 🎯 Ideal For Demonstrating
 
-This project was built to demonstrate production-level full-stack engineering skills including authentication architecture, backend design, and real-time system integration.
+* Full-Stack MERN Development
+* Authentication Architecture
+* Payment Gateway Integration
+* Role-Based Authorization
+* REST API Design
+* Real-Time Application Workflows
+* Production Deployment Practices
 
-If you found this interesting, feel free to explore the codebase or suggest improvements.
+---
+
+## 🤝 Contributing
+
+Contributions, ideas, and improvements are always welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to your branch
+5. Open a Pull Request
 
 ---
 
 ## 📜 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -208,9 +281,21 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 **Hadi Shah**
 
-- GitHub: [@hadishah123](https://github.com/hadishah123)  
-- LinkedIn: [Hadi Shah](https://linkedin.com/in/hadishah123)
+* GitHub: [@hadishah123](https://github.com/hadishah123)
+* LinkedIn: [Hadi Shah](https://linkedin.com/in/hadishah123)
 
 ---
 
-⭐ If you liked this project, don’t forget to star the repo!
+## ⭐ Support the Project
+
+If you found SnackHub useful or inspiring:
+
+* ⭐ Star the repository
+* 🍴 Fork the project
+* 🐛 Report issues
+* 💡 Suggest new features
+* 🤝 Contribute improvements
+
+<p align="center">
+  <b>Built with passion, code, and lots of snacks 🍕</b>
+</p>
